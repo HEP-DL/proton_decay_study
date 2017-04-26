@@ -25,7 +25,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
     x,y = self.next()
     self.current_index =current_index
     self.file_index = file_index
-    return x.shape
+    return x[0].shape
 
   @property
   def input(self):
@@ -34,7 +34,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
     x,y = self.next()
     self.current_index =current_index
     self.file_index = file_index
-    return y.shape[0]
+    return y[0].shape[0]
 
   def __len__(self):
     """
@@ -48,10 +48,13 @@ class MultiFileDataGenerator(BaseDataGenerator):
       This should iterate over both files and datasets within a file.
     """
     if self.current_index >= self._files[self.file_index][self._dataset].shape[0]:
+      next_file_index = self.file_index+1
+      if next_file_index>= len(self._files):
+        next_file_index=0
       self.logger.info("Reached end of file: {} Moving to next file: {}".format(self._files[self.file_index], 
-                                                                                self._files[self.file_index+1]))
+                                                                                self._files[next_file_index]))
       self.file_index +=1
-    if self.file_index == len(self._files):
+    if self.file_index >= len(self._files):
       self.logger.info("Reached end of file stack. Now reusing data")
       self.file_index = 0 
       self.current_index = 0
@@ -63,8 +66,12 @@ class MultiFileDataGenerator(BaseDataGenerator):
       self.logger.info("Crossing file boundary with remainder: {}".format(remainder))
       x =  self._files[self.file_index][self._dataset][self.current_index:]
       y =  self._files[self.file_index][self._labelset][self.current_index:]
-      x += self._files[self.file_index+1][self._dataset][:remainder]
-      y += self._files[self.file_index+1][self._labelset][:remainder]
+      if remainder>0 :
+        next_file_index = self.file_index+1
+        if next_file_index>= len(self._files):
+          next_file_index=0
+        x += self._files[next_file_index][self._dataset][:remainder]
+        y += self._files[next_file_index][self._labelset][:remainder]
       self.file_index+=1
       self.current_index = remainder
       return (x,y)
