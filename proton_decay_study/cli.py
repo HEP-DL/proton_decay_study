@@ -14,10 +14,10 @@ def main():
 def standard_vgg_training(file_list):
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
-  from proton_decay_studies.models import VGG16
-  from proton_decay_studies.generators.multi_file import MultiFileDataGenerator
+  from proton_decay_study.models.vgg16 import VGG16
+  from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 
-  generator = MultiFileDataGenerator(file_list)
+  generator = MultiFileDataGenerator(file_list, 'images/wires','label/type')
   model = VGG16(generator)
   training_output = model.fit_generator(generator, samples_per_epoch = 1000, 
                                       nb_epoch=1000)

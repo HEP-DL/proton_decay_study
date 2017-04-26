@@ -8,7 +8,7 @@ from keras.utils.data_utils import get_file
 import logging
 
 
-class InceptionV4(Model)
+class InceptionV4(Model):
     logger = logging.getLogger('pdk.model.inceptionv4')
 
     def __init__(self, generator):

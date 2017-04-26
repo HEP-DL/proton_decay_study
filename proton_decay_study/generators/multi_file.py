@@ -1,5 +1,6 @@
 from proton_decay_study.generators.base import BaseDataGenerator
 import h5py
+import logging
 
 
 class MultiFileDataGenerator(BaseDataGenerator):
@@ -16,6 +17,18 @@ class MultiFileDataGenerator(BaseDataGenerator):
     self.batch_size = batch_size
     self.file_index=0
     self.current_index=0
+
+  @property
+  def output(self):
+    return (None,len(self._files[0][self._dataset][0]),
+            len(self._files[0][self._dataset][0][0]), 
+            len(self._files[0][self._dataset][0][0][0]) )
+
+  @property
+  def input(self):
+    return (None,len(self._files[0][self._labelset][0]),
+            len(self._files[0][self._labelset][0][0]), 
+            len(self._files[0][self._labelset][0][0][0]) )
 
   def __len__(self):
     """
