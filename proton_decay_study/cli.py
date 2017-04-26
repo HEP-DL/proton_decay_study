@@ -12,7 +12,7 @@ def main():
 @click.command()
 @click.argument('file_list', nargs=-1)
 def standard_vgg_training(file_list):
-  logging.basicConfig(level=DEBUG)
+  logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
   from proton_decay_studies.models import VGG16
   from proton_decay_studies.generators.multi_file import MultiFileDataGenerator
