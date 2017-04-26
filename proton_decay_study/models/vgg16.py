@@ -1,10 +1,19 @@
+from keras.layers import Input, merge, Dropout, Dense, Flatten, Activation
+from keras.layers.convolutional import MaxPooling2D, Convolution2D, AveragePooling2D
+from keras.layers.normalization import BatchNormalization
+from keras.models import Model
 
+from keras import backend as K
+from keras.utils.data_utils import get_file
+import logging
 
 
 class VGG16(Model):
-  logger = logging.getLogger('uboone.vgg16')
-  def __init__(self):
+  logger = logging.getLogger('pdk.vgg16')
+  
+  def __init__(self, generator):
 
+    self.generator = generator
     self.logger.info("Assembling Model")
     # The input shape is defined as 3 planes at 576x576 pixels
     # TODO: I think with the Theano backend, this might need to be reversed.
@@ -12,7 +21,7 @@ class VGG16(Model):
     if K.image_dim_ordering() != 'th':
         self.logger.error("Dimension Ordering Incorrect")
 
-    self._input = Input(shape=(3,576,576))
+    self._input = Input(generator.output)
     #self.logger.debug("Input Shape: {}".format(self._input.output_shape))
 
     # Block 1
@@ -60,8 +69,18 @@ class VGG16(Model):
     layer = Flatten(name='flatten')(layer)
     layer = Dense(4096, activation='relu', name='fc1')(layer)
     layer = Dense(4096, activation='relu', name='fc2')(layer)
-    layer = Dense(5, activation='softmax', name='predictions')(layer)
+    layer = Dense(generator.input, activation='softmax', name='predictions')(layer)
     
     super(VGG16, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
     self.compile(loss='binary_crossentropy', optimizer='sgd')
+"""
+  def train_with_incremental_save(self, samples_per_epoch, n_epochs_total, epoch_per_save):
+    #loop over the trainings and save to file
+    total_epoch
+
+
+
+    training_output = model.fit_generator(self._input, samples_per_epoch = samples_per_epoch, 
+                                      nb_epoch=n_epochs_total)
+"""
