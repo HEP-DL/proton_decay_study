@@ -62,7 +62,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
       """
         This is the rare case of stitching together more than 1 file by crossing the boundary.
       """
-      remainder = self._files[self.file_index][self._dataset].shape[0]- self.current_index
+      remainder = abs(self._files[self.file_index][self._dataset].shape[0]- self.current_index)
       self.logger.info("Crossing file boundary with remainder: {}".format(remainder))
       x =  self._files[self.file_index][self._dataset][self.current_index:]
       y =  self._files[self.file_index][self._labelset][self.current_index:]

@@ -26,7 +26,7 @@ def standard_vgg_training(file_list):
   logger.info("Done.")
 
 @click.command()
-@click.argument('n_gen', nargs=1)
+@click.argument('n_gen', nargs=1, type=click.INT)
 @click.argument('file_list', nargs=-1)
 def test_file_input(n_gen, file_list):
   logging.basicConfig(level=logging.DEBUG)
@@ -35,11 +35,22 @@ def test_file_input(n_gen, file_list):
   from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 
   generator = MultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
-  for i in range(n_gen):
+  for i in range(int(n_gen)):
     x,y = generator.next()
     if len(x==0):
-      logging.warning("Found null frame")
-      logging.warning('File: {}'.format(generator._files[generator.file_index]))
+      logging.warning("""Found NULL Frame
+        File: {}
+        Index: {}
+        Batch Size: {}
+        Remainder: {}
+        Object: {}
+        """.format(generator._files[generator.file_index],
+                    generator.current_index,
+                    generator.batch_size,
+                    generator.current_index- len(generator._files[generator.file_index]),
+                    (x,y)
+          )
+      )
   logger.info("Done.")
 
 if __name__ == "__main__":
