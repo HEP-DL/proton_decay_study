@@ -26,7 +26,7 @@ def standard_vgg_training(file_list):
   logger.info("Done.")
 
 @click.command()
-@click.argument('n_gen', nargs=-1)
+@click.argument('n_gen', nargs=1)
 @click.argument('file_list', nargs=-1)
 def test_file_input(n_gen, file_list):
   logging.basicConfig(level=logging.DEBUG)
