@@ -25,7 +25,7 @@ setup(
                  'proton_decay_study'},
     entry_points={
         'console_scripts': [
-            'proton_decay_study=proton_decay_study.cli:main'
+            'proton_decay_study=proton_decay_study.cli:main',
             'vgg_training=proton_decay_study.cli:standard_vgg_training'
         ]
     },
