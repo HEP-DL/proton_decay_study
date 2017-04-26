@@ -20,14 +20,21 @@ class MultiFileDataGenerator(BaseDataGenerator):
 
   @property
   def output(self):
-    return (self.batch_size, len(self._files[0][self._dataset][0]),
-            len(self._files[0][self._dataset][0][0]), 
-            len(self._files[0][self._dataset][0][0][0]))
+    current_index= self.current_index
+    file_index = self.file_index
+    x,y = self.next()
+    self.current_index =current_index
+    self.file_index = file_index
+    return x.shape
 
   @property
   def input(self):
-    return len(self._files[0][self._labelset][0]) 
-    #(self.batch_size, len(self._files[0][self._labelset][0]))
+    current_index= self.current_index
+    file_index = self.file_index
+    x,y = self.next()
+    self.current_index =current_index
+    self.file_index = file_index
+    return y.shape
 
   def __len__(self):
     """
@@ -48,7 +55,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
       self.logger.info("Reached end of file stack. Now reusing data")
       self.file_index = 0 
       self.current_index = 0
-    if self.current_index+self.batch_size>= self._files[self.file_index][self._dataset].shape[0]:
+    if self.current_index+self.batch_size>self._files[self.file_index][self._dataset].shape[0]:
       """
         This is the rare case of stitching together more than 1 file by crossing the boundary.
       """
