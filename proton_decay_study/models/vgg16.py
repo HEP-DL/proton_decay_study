@@ -24,13 +24,13 @@ class VGG16(Model):
     layer = Conv3D(64, 3, activation='relu', padding='same', 
                           name='block1_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block1_pool')(layer)
+    layer = MaxPooling3D((2, 1, 2), strides=(1, 2, 2), name='block1_pool')(layer)
 
     layer = Conv3D(128, 3, activation='relu', padding='same', 
                           name='block2_conv1')(layer)
     layer = Conv3D(128, 3, activation='relu', padding='same', 
                           name='block2_conv2')(layer)
-    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block2_pool')(layer)
+    layer = MaxPooling3D((2, 1, 2), strides=(1, 2, 2), name='block2_pool')(layer)
 
     layer = Conv3D(256, 3, activation='relu', padding='same', 
                           name='block3_conv1')(layer)
@@ -38,7 +38,7 @@ class VGG16(Model):
                           name='block3_conv2')(layer)
     layer = Conv3D(256, 3, activation='relu', padding='same', 
                           name='block3_conv3')(layer)
-    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block3_pool')(layer)
+    layer = MaxPooling3D((2, 1, 2), strides=(1, 2, 2), name='block3_pool')(layer)
 
     layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block4_conv1')(layer)
@@ -46,7 +46,7 @@ class VGG16(Model):
                           name='block4_conv2')(layer)
     layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block4_conv3')(layer)
-    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block4_pool')(layer)
+    layer = MaxPooling3D((2, 1, 2), strides=(1, 2, 2), name='block4_pool')(layer)
 
     layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block5_conv1')(layer)
@@ -54,7 +54,7 @@ class VGG16(Model):
                           name='block5_conv2')(layer)
     layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block5_conv3')(layer)
-    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block5_pool')(layer)
+    layer = MaxPooling3D((2, 1, 2), strides=(1, 2, 2), name='block5_pool')(layer)
 
     # Classification block
     layer = Flatten(name='flatten')(layer)

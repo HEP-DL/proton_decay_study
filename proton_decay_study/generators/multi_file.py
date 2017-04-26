@@ -34,7 +34,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
     x,y = self.next()
     self.current_index =current_index
     self.file_index = file_index
-    return y.shape
+    return y.shape[0]
 
   def __len__(self):
     """
