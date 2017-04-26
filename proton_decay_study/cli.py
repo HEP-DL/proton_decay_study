@@ -37,7 +37,7 @@ def test_file_input(n_gen, file_list):
   generator = MultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
   for i in range(int(n_gen)):
     x,y = generator.next()
-    if len(x==0):
+    if len(x)==0:
       logging.warning("""Found NULL Frame
         File: {}
         Index: {}
