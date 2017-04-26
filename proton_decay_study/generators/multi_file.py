@@ -81,4 +81,6 @@ class MultiFileDataGenerator(BaseDataGenerator):
     x = self._files[self.file_index][self._dataset][self.current_index:self.current_index+self.batch_size]
     y = self._files[self.file_index][self._labelset][self.current_index:self.current_index+self.batch_size]
     self.current_index+=self.batch_size
+    if len(x) == 0:
+      return next(self)
     return (x,y)
