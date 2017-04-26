@@ -1,7 +1,12 @@
 import logging
 import abc
 
+
 class BaseDataGenerator(object)
+  """
+    Base data generator which hooks into the networks to provide
+    an interface to the incoming data.
+  """
   logger = logging.getLogger('pdk.generator')
   __metaclass__ = abc.ABCMeta
 

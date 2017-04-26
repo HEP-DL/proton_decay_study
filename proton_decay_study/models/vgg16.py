@@ -1,3 +1,6 @@
+
+
+
 class VGG16(Model):
   logger = logging.getLogger('uboone.vgg16')
   def __init__(self):
