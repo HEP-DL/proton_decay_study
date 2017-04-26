@@ -18,9 +18,6 @@ class VGG16(Model):
     # The input shape is defined as 3 planes at 576x576 pixels
     # TODO: I think with the Theano backend, this might need to be reversed.
 
-    if K.image_dim_ordering() != 'th':
-        self.logger.error("Dimension Ordering Incorrect")
-
     self._input = Input(generator.output)
     #self.logger.debug("Input Shape: {}".format(self._input.output_shape))
 

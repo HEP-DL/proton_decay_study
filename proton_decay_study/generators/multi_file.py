@@ -22,7 +22,9 @@ class MultiFileDataGenerator(BaseDataGenerator):
   def output(self):
     return (None,len(self._files[0][self._dataset][0]),
             len(self._files[0][self._dataset][0][0]), 
-            len(self._files[0][self._dataset][0][0][0]) )
+            len(self._files[0][self._dataset][0][0][0]),
+            len(self._files[0][self._dataset][0][0][0][0])
+           )
 
   @property
   def input(self):
