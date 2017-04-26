@@ -10,7 +10,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
 
 @click.command()
-@click.argument('file_list', nargs=1)
+@click.argument('file_list', nargs=-1)
 def standard_vgg_training(file_list):
   logging.basicConfig(level=DEBUG)
   logger = logging.getLogger()
