@@ -17,7 +17,7 @@ def standard_vgg_training(file_list):
   from proton_decay_study.models.vgg16 import VGG16
   from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 
-  generator = MultiFileDataGenerator(file_list, 'images/wires','label/type')
+  generator = MultiFileDataGenerator(file_list, 'image/wires','label/type')
   model = VGG16(generator)
   training_output = model.fit_generator(generator, samples_per_epoch = 1000, 
                                       nb_epoch=1000)
