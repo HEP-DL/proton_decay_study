@@ -20,17 +20,14 @@ class MultiFileDataGenerator(BaseDataGenerator):
 
   @property
   def output(self):
-    return (None,len(self._files[0][self._dataset][0]),
+    return (self.batch_size, len(self._files[0][self._dataset][0]),
             len(self._files[0][self._dataset][0][0]), 
-            len(self._files[0][self._dataset][0][0][0]),
-            len(self._files[0][self._dataset][0][0][0][0])
-           )
+            len(self._files[0][self._dataset][0][0][0]))
 
   @property
   def input(self):
-    return (None,len(self._files[0][self._labelset][0]),
-            len(self._files[0][self._labelset][0][0]), 
-            len(self._files[0][self._labelset][0][0][0]) )
+    return len(self._files[0][self._labelset][0]) 
+    #(self.batch_size, len(self._files[0][self._labelset][0]))
 
   def __len__(self):
     """

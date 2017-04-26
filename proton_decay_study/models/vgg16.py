@@ -1,5 +1,5 @@
 from keras.layers import Input, merge, Dropout, Dense, Flatten, Activation
-from keras.layers.convolutional import MaxPooling2D, Convolution2D, AveragePooling2D
+from keras.layers.convolutional import MaxPooling3D, Conv3D, AveragePooling3D
 from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 
@@ -15,52 +15,46 @@ class VGG16(Model):
 
     self.generator = generator
     self.logger.info("Assembling Model")
-    # The input shape is defined as 3 planes at 576x576 pixels
-    # TODO: I think with the Theano backend, this might need to be reversed.
+    self._input = Input(shape=generator.output)
+    self.logger.info(self._input.shape)
 
-    self._input = Input(generator.output)
-    #self.logger.debug("Input Shape: {}".format(self._input.output_shape))
-
-    # Block 1
-    layer = Convolution2D(64, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(64, 3, activation='relu', padding='same', 
                           name='block1_conv1')(self._input)
-    layer = Convolution2D(64, 3, 3, activation='relu', border_mode='same', 
+    self.logger.info(layer.shape)
+    layer = Conv3D(64, 3, activation='relu', padding='same', 
                           name='block1_conv2')(layer)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(layer)
+    self.logger.info(layer.shape)
+    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block1_pool')(layer)
 
-    # Block 2
-    layer = Convolution2D(128, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(128, 3, activation='relu', padding='same', 
                           name='block2_conv1')(layer)
-    layer = Convolution2D(128, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(128, 3, activation='relu', padding='same', 
                           name='block2_conv2')(layer)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(layer)
+    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block2_pool')(layer)
 
-    # Block 3
-    layer = Convolution2D(256, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(256, 3, activation='relu', padding='same', 
                           name='block3_conv1')(layer)
-    layer = Convolution2D(256, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(256, 3, activation='relu', padding='same',
                           name='block3_conv2')(layer)
-    layer = Convolution2D(256, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(256, 3, activation='relu', padding='same', 
                           name='block3_conv3')(layer)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(layer)
+    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block3_pool')(layer)
 
-    # Block 4
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block4_conv1')(layer)
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block4_conv2')(layer)
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block4_conv3')(layer)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(layer)
+    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block4_pool')(layer)
 
-    # Block 5
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block5_conv1')(layer)
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block5_conv2')(layer)
-    layer = Convolution2D(512, 3, 3, activation='relu', border_mode='same', 
+    layer = Conv3D(512, 3, activation='relu', padding='same', 
                           name='block5_conv3')(layer)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool')(layer)
+    layer = MaxPooling3D((1, 1, 2), strides=(1, 2, 2), name='block5_pool')(layer)
 
     # Classification block
     layer = Flatten(name='flatten')(layer)
