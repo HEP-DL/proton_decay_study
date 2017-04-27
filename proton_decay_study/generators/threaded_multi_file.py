@@ -94,40 +94,40 @@ class SingleFileThread(threading.Thread):
           self.logger.error(repr(traceback.format_exception(exc_type, exc_value,
                                                 exc_traceback)))
 
-    @staticmethod
-    def killRunThreads(signum, frame):
-        """
-            Sets the thread kill flag to each of the ongoing analysis threads
-        """
-        SingleFileThread.__ThreadExitFlag__ = 0
-        sys.exit(signum)
+  @staticmethod
+  def killRunThreads(signum, frame):
+      """
+          Sets the thread kill flag to each of the ongoing analysis threads
+      """
+      SingleFileThread.__ThreadExitFlag__ = 0
+      sys.exit(signum)
 
-    @staticmethod
-    def startThreads(nThreads, datasetname,
-                              labelsetname, batch_size):
-        for i in range(nThreads):
-            thread = SingleFileThread(datasetname,
-                              labelsetname, batch_size)
-            thread.start()
-            SingleFileThread.activeThreads.append(thread)
+  @staticmethod
+  def startThreads(nThreads, datasetname,
+                            labelsetname, batch_size):
+      for i in range(nThreads):
+          thread = SingleFileThread(datasetname,
+                            labelsetname, batch_size)
+          thread.start()
+          SingleFileThread.activeThreads.append(thread)
 
-    @staticmethod
-    def waitTillComplete(callback=None):
-        if callback is None:
-            while not SingleFileThread.queue.empty() and SingleFileThread.__ThreadExitFlag__:
-                sys.stdout.flush()
-        else:
-            while not SingleFileThread.queue.empty() and SingleFileThread.__ThreadExitFlag__:
-                callback()
+  @staticmethod
+  def waitTillComplete(callback=None):
+      if callback is None:
+          while not SingleFileThread.queue.empty() and SingleFileThread.__ThreadExitFlag__:
+              sys.stdout.flush()
+      else:
+          while not SingleFileThread.queue.empty() and SingleFileThread.__ThreadExitFlag__:
+              callback()
 
-        # Notify threads it's time to exit
-        SingleFileThread.__ThreadExitFlag__ = 0
+      # Notify threads it's time to exit
+      SingleFileThread.__ThreadExitFlag__ = 0
 
-        # Wait for all threads to complete
-        for t in SingleFileThread.activeThreads:
-            t.join()
-        # dealloc
-        SingleFileThread.activeThreads = []
+      # Wait for all threads to complete
+      for t in SingleFileThread.activeThreads:
+          t.join()
+      # dealloc
+      SingleFileThread.activeThreads = []
 
 signal.signal(signal.SIGINT, SingleFileThread.killRunThreads)
 
