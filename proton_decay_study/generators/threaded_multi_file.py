@@ -48,7 +48,7 @@ class SingleFileThread(threading.Thread):
 
     # prefetched means that there's data ready
     self._buffer = None 
-    self.single_thread_lock = threading.Lock
+    self.single_thread_lock = threading.Lock()
 
     # This holds the 
     self._filegen = None
