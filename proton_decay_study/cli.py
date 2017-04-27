@@ -7,6 +7,8 @@ import logging
 import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+from proton_decay_study.generators.threaded_multi_file import ThreadedMultiFileDataGenerator
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 import signal
 import sys
 
@@ -29,7 +31,7 @@ def standard_vgg_training(file_list):
   training_output = model.fit_generator(generator, steps_per_epoch = 1000, 
                                       epochs=1000)
   model.save("trained_weights.h5")
-  open('history.json','w').write(str(training_output))
+  open('history.json','w').write(str(training_output.history))
   logger.info("Done.")
 
 
@@ -62,12 +64,19 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   if weights is not None:
     model.load_weights(weights)
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
-                                      epochs=epochs)
+                                      epochs=epochs, 
+                                      callbacks=[
+                                        ModelCheckpoint('{}.{epoch:02d}-{val_loss:.2f}.hdf5'.format(output), 
+                                          monitor='val_loss', 
+                                          verbose=0, 
+                                          save_best_only=True, 
+                                          save_weights_only=True, 
+                                          mode='auto', 
+                                          period=10)
+                                      ])
   model.save(output)
   open(history,'w').write(str(training_output))
   logger.info("Done.")
-
-
 
 
 @click.command()
@@ -97,6 +106,36 @@ def test_file_input(n_gen, file_list):
           )
       )
   logger.info("Done.")
+
+@click.command()
+@click.argument('n_gen', nargs=1, type=click.INT)
+@click.argument('file_list', nargs=-1)
+def test_threaded_file_input(n_gen, file_list):
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+  from proton_decay_study.models.vgg16 import VGG16
+  from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+
+  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
+  for i in range(int(n_gen)):
+    x,y = generator.next()
+    if len(x)==0:
+      logging.warning("""Found NULL Frame
+        File: {}
+        Index: {}
+        Batch Size: {}
+        Remainder: {}
+        Object: {}
+        """.format(generator._files[generator.file_index],
+                    generator.current_index,
+                    generator.batch_size,
+                    generator.current_index- len(generator._files[generator.file_index]),
+                    (x,y)
+          )
+      )
+  logger.info("Done.")
+
+
 
 if __name__ == "__main__":
     main()

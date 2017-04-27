@@ -79,7 +79,7 @@ class VGG16(Model):
     
     super(VGG16, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
-    self.compile(loss='binary_crossentropy', optimizer='sgd')
+    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
 """
   def train_with_incremental_save(self, samples_per_epoch, n_epochs_total, epoch_per_save):
     #loop over the trainings and save to file

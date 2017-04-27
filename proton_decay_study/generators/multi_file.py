@@ -7,7 +7,7 @@ class MultiFileDataGenerator(BaseDataGenerator):
   """
     Creates a generator for a list of files
   """
-  logger = logging.getLogger("pdk.generator.single")
+  logger = logging.getLogger("pdk.gen.multi")
 
   def __init__(self, datapaths, datasetname, 
                labelsetname, batch_size=10):

@@ -6,7 +6,7 @@ class SingleFileDataGenerator(BaseDataGenerator):
   """
     Creates a generator for a single file
   """
-  logger = logging.getLogger("pdk.generator.single")
+  logger = logging.getLogger("pdk.gen.single")
 
   def __init__(self, datapath, dataset, labelset, batch_size=10):
     self._file = h5py.File(datapath,'r')

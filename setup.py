@@ -16,10 +16,18 @@ setup(
     name='proton_decay_study',
     version='0.1.0',
     description="Looks for proton decay. USING NEURAL NETWORKS",
-    long_description="TODO: Fill in",
+    long_description="""
+        Top-level code base for CNN study of LArTPC data for proton decay.
+
+        This relies primarily on Kevlar and Keras with the Tensorflow backend.
+
+        Kevlar provides the data interface consumned by the generators. Keras and
+        tensorflow provide the framework used to train and utilize the networks.
+
+    """,
     author="Kevin Wierman",
-    author_email='kwierman@gmail.com',
-    url='https://github.com/kwierman/proton_decay_study',
+    author_email='kevin.wierman@pnnl.gov',
+    url='https://github.com/HEP-DL/proton_decay_study',
     packages=find_packages(),
     package_dir={'proton_decay_study':
                  'proton_decay_study'},
@@ -28,7 +36,8 @@ setup(
             'proton_decay_study=proton_decay_study.cli:main',
             'vgg_training=proton_decay_study.cli:standard_vgg_training',
             'kjw_train=proton_decay_study.cli:advanced_vgg_training',
-            'test_file_input=proton_decay_study.cli:test_file_input'
+            'test_file_input=proton_decay_study.cli:test_file_input',
+            'test_threaded_files=proton_decay_study.cli:test_threaded_file_input'
         ]
     },
     include_package_data=True,
@@ -41,11 +50,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
