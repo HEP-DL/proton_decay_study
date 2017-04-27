@@ -27,6 +27,7 @@ setup(
         'console_scripts': [
             'proton_decay_study=proton_decay_study.cli:main',
             'vgg_training=proton_decay_study.cli:standard_vgg_training',
+            'kjw_train=proton_decay_study.cli:advanced_vgg_training',
             'test_file_input=proton_decay_study.cli:test_file_input'
         ]
     },
