@@ -41,7 +41,7 @@ class SingleFileThread(threading.Thread):
         :param: batch_size The number of images and truths to pull from the file.
         :type: batch_size int
     """
-    super(Thread, self).__init__()
+    super(SingleFileThread, self).__init__()
     self.datasetname = datasetname
     self.labelsetname = labelsetname
     self.batch_size = batch_size
