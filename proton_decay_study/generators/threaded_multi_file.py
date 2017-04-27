@@ -1,5 +1,5 @@
 from proton_decay_study.generators.base import BaseDataGenerator
-from proton_decay_study.generators.single import SingleFileGenerator
+from proton_decay_study.generators.single_file import SingleFileGenerator
 import h5py
 import logging
 import threading
