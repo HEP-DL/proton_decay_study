@@ -41,11 +41,11 @@ def signal_handler(signal, frame):
   sys.exit(0)
 
 @click.command()
-@click.argument('--steps', default=100, type=click.INT)
-@click.argument('--epochs', default=1000, type=click.INT)
-@click.argument('--weights',default=None, type=click.Path(exists=True))
-@click.argument('--history', default='history.json')
-@click.argument('--output',default='stage1.h5')
+@click.option('--steps', default=1000, type=click.INT)
+@click.option('--epochs', default=1000, type=click.INT)
+@click.option('--weights',default=None, type=click.Path(exists=True))
+@click.option('--history', default='history.json')
+@click.option('--output',default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   logging.basicConfig(level=logging.DEBUG)
