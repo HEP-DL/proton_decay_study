@@ -24,9 +24,10 @@ class SingleFileDataGenerator(BaseDataGenerator):
     if self.current_index>= len(self):
         self.logger.info("Reusing Data at Size: {}".format(len(self)))
         self.current_index = 0
+    tmp_batch_size = self.batch_size
     if self.current_index+self.batch_size>= len(self):
-        self.batch_size = len(self)-self.current_index
-    x = self._dataset[self.current_index:self.current_index+self.batch_size]
-    y = self._labelset[self.current_index:self.current_index+self.batch_size]
-    self.current_index+=self.batch_size
+        tmp_batch_size = len(self)-self.current_index
+    x = self._dataset[self.current_index:self.current_index+tmp_batch_size]
+    y = self._labelset[self.current_index:self.current_index+tmp_batch_size]
+    self.current_index+=tmp_batch_size
     return (x,y)
