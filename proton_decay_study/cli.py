@@ -4,7 +4,7 @@ import click
 import logging
 import sys
 import logging
-import tensorflow
+import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 import signal
