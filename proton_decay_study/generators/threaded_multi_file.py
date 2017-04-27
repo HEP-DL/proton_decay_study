@@ -158,14 +158,20 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   @property
   def output(self):
-    # TODO: redo this
+    x,y = self.next()
+    return x[0].shape
 
   @property
   def input(self):
-    # TODO: redo this.
+    x,y = self.next()
+    return y[0].shape[0]
 
   def __len__(self):
-    # TODO: redo this.
+    """
+      Iterates over files to create the total sum length
+      of the datasets in each file.
+    """
+    return 0
 
   def next(self):
     #see if there's any pre-fetched data
