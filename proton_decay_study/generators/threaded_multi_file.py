@@ -99,18 +99,19 @@ class SingleFileThread(threading.Thread):
       """
           Sets the thread kill flag to each of the ongoing analysis threads
       """
+      self.logger.info("Killing threads...")
       SingleFileThread.__ThreadExitFlag__ = 0
       sys.exit(signum)
 
   @staticmethod
   def startThreads(nThreads, datasetname,
                             labelsetname, batch_size):
-    self.logger.info("Starting {} Single File threads")
-      for i in range(nThreads):
-          thread = SingleFileThread(datasetname,
-                            labelsetname, batch_size)
-          thread.start()
-          SingleFileThread.activeThreads.append(thread)
+    self.logger.info("Starting {} Single File threads".format(nThreads))
+    for i in range(nThreads):
+        thread = SingleFileThread(datasetname,
+                          labelsetname, batch_size)
+        thread.start()
+        SingleFileThread.activeThreads.append(thread)
 
   @staticmethod
   def waitTillComplete(callback=None):
