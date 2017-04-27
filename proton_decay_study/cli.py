@@ -36,8 +36,10 @@ def standard_vgg_training(file_list):
 _model = None
 def signal_handler(signal, frame):
   global _model
+  logging.info("SigINT was called. Saving Model")
   if _model is not None:
     _model.save('interrupted_output.h5')
+    logging.info('Model Weights saved to interrupted_output.h5')
   sys.exit(0)
 
 @click.command()
