@@ -133,6 +133,8 @@ def test_threaded_file_input(n_gen, file_list):
                     (x,y)
           )
       )
+    else:
+      logging.debug((x,y))
   logger.info("Done.")
 
 
