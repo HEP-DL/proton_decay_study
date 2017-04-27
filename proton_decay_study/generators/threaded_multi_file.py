@@ -73,7 +73,7 @@ class SingleFileThread(threading.Thread):
           continue
         self.single_thread_lock.release()
 
-      if self._filegen is None:
+      if self._filegen is None or self._filegen.reused:
         self.queueLock.acquire()
         if not self.queue.empty():
           self._filegen = SingleFileDataGenerator(SingleFileThread.queue.get(), 

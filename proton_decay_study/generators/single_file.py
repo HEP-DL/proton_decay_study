@@ -15,15 +15,16 @@ class SingleFileDataGenerator(BaseDataGenerator):
     self._labelset = self._file[labelset]
     self.current_index=0
     self.batch_size = batch_size
+    self.reused = False
 
   def __len__(self):
     return self._dataset.shape[0]
-
 
   def next(self):
     if self.current_index>= len(self):
         self.logger.info("Reusing Data at Size: {}".format(len(self)))
         self.current_index = 0
+        self.reused = True
     tmp_batch_size = self.batch_size
     if self.current_index+self.batch_size>= len(self):
         tmp_batch_size = len(self)-self.current_index
