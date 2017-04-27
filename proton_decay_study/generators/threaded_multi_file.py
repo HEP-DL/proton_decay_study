@@ -1,5 +1,5 @@
 from proton_decay_study.generators.base import BaseDataGenerator
-from proton_decay_study.generators.single_file import SingleFileGenerator
+from proton_decay_study.generators.single_file import SingleFileDataGenerator
 import h5py
 import logging
 import threading
@@ -75,7 +75,7 @@ class SingleFileThread(threading.Thread):
       if self._filegen is None:
         self.queueLock.acquire()
         if not self.queue.empty():
-          self._filegen = SingleFileGenerator(SingleFileThread.queue.get(), 
+          self._filegen = SingleFileDataGenerator(SingleFileThread.queue.get(), 
                                               self.datasetname, self.labelsetname, 
                                               self.batch_size)
         self.queueLock.release()
