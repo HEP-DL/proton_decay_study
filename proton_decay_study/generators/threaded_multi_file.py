@@ -76,9 +76,11 @@ class SingleFileThread(threading.Thread):
       if self._filegen is None or self._filegen.reused:
         self.queueLock.acquire()
         if not self.queue.empty():
+
           self._filegen = SingleFileDataGenerator(SingleFileThread.queue.get(), 
                                               self.datasetname, self.labelsetname, 
                                               self.batch_size)
+          self.logger.info("Moving to file: {}".format(self._filegen))
         self.queueLock.release()
       else:
         try:
@@ -87,6 +89,7 @@ class SingleFileThread(threading.Thread):
             self._buffer  = self._filegen.next()
             self.single_thread_lock.release()
           except StopIteration:
+            self.logger.warning("Hit Stop Iteration")
             self._buffer  = None
             self.single_thread_lock.release()
             self._filegen = None

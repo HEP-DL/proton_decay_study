@@ -8,19 +8,26 @@ import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 from proton_decay_study.generators.threaded_multi_file import ThreadedMultiFileDataGenerator
+from proton_decays_study.callbacks.default import HistoryRecord
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 import signal
 import sys
 
 
-
 @click.command()
 def main():
+    """
+      For the moment, main just does main things
+    """
     logging.basicConfig(level=logging.INFO)
+
 
 @click.command()
 @click.argument('file_list', nargs=-1)
 def standard_vgg_training(file_list):
+  """
+    Standard VGG Training is aimed at 
+  """
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
   sess = tf.Session()
@@ -31,9 +38,9 @@ def standard_vgg_training(file_list):
   training_output = model.fit_generator(generator, steps_per_epoch = 1000, 
                                       epochs=1000)
   model.save("trained_weights.h5")
-  open('history.json','w').write(str(training_output.history))
+  open('history.json','w').write({'loss':training_output.history['loss'], 
+                                  'accuracy':training_output['accuracy']})
   logger.info("Done.")
-
 
 _model = None
 def signal_handler(signal, frame):
@@ -43,6 +50,7 @@ def signal_handler(signal, frame):
     _model.save('interrupted_output.h5')
     logging.info('Model Weights saved to interrupted_output.h5')
   sys.exit(0)
+
 
 @click.command()
 @click.option('--steps', default=1000, type=click.INT)
@@ -63,10 +71,11 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   _model = model
   if weights is not None:
     model.load_weights(weights)
+  history = 
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs, 
                                       callbacks=[
-                                        ModelCheckpoint('{}.{epoch:02d}-{val_loss:.2f}.hdf5'.format(output), 
+                                        ModelCheckpoint(output, 
                                           monitor='val_loss', 
                                           verbose=0, 
                                           save_best_only=True, 
