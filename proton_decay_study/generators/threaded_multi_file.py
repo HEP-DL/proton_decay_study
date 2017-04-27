@@ -105,6 +105,7 @@ class SingleFileThread(threading.Thread):
   @staticmethod
   def startThreads(nThreads, datasetname,
                             labelsetname, batch_size):
+    self.logger.info("Starting {} Single File threads")
       for i in range(nThreads):
           thread = SingleFileThread(datasetname,
                             labelsetname, batch_size)
