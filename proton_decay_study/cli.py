@@ -57,6 +57,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
 
   generator = MultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
   model = VGG16(generator)
+  global _model
   _model = model
   if weights is not None:
     model.load_weights(weights)
