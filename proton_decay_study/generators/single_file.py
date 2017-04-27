@@ -1,5 +1,6 @@
 from proton_decay_study.generators.base import BaseDataGenerator
 import h5py
+import logging
 
 
 class SingleFileDataGenerator(BaseDataGenerator):
