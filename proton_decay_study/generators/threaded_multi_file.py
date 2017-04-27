@@ -71,6 +71,7 @@ class SingleFileThread(threading.Thread):
         if self._buffer is not None:
           self.single_thread_lock.release()
           continue
+        self.single_thread_lock.release()
 
       if self._filegen is None:
         self.queueLock.acquire()
@@ -139,7 +140,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
   """
       Uses threads to pull asynchronously from files
   """
-  logger = logging.getLogger("pdk.generator.threaded_multi")
+  logger = logging.getLogger("pdk.gen.threaded_multi")
 
   def __init__(self, datapaths, datasetname, 
                labelsetname, batch_size=1, nThreads=4):
