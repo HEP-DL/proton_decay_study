@@ -99,19 +99,20 @@ class SingleFileThread(threading.Thread):
       """
           Sets the thread kill flag to each of the ongoing analysis threads
       """
-      logging.info("Killing Single File threads...")
+      SingleFileThread.logger.info("Killing Single File threads...")
       SingleFileThread.__ThreadExitFlag__ = 0
       sys.exit(signum)
 
   @staticmethod
   def startThreads(nThreads, datasetname,
                             labelsetname, batch_size):
-    logging.info("Starting {} Single File threads".format(nThreads))
+    SingleFileThread.logger.info("Starting {} Single File threads".format(nThreads))
     for i in range(nThreads):
         thread = SingleFileThread(datasetname,
                           labelsetname, batch_size)
         thread.start()
         SingleFileThread.activeThreads.append(thread)
+    SingleFileThread.logger.info("Threads successfully started")
 
   @staticmethod
   def waitTillComplete(callback=None):
@@ -152,6 +153,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     SingleFileThread.queueLock.release()
 
     self.datapaths = datapaths
+    self.logger.info("Threaded multi file generator ready for generation")
 
   def __del__(self):
     SingleFileThread.threadLock.release()

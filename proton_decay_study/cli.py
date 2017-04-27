@@ -117,6 +117,7 @@ def test_threaded_file_input(n_gen, file_list):
   from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 
   generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
+  logging.info("Now loading data...")
   for i in range(int(n_gen)):
     x,y = generator.next()
     if len(x)==0:
