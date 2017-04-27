@@ -71,7 +71,6 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   _model = model
   if weights is not None:
     model.load_weights(weights)
-  history = 
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs, 
                                       callbacks=[
