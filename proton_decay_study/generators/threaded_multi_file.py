@@ -204,6 +204,11 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
         new_buff = thread._buffer
         thread._buffer = None
         thread.single_thread_lock.release()
+        if new_buff is None:
+          return self.next()
+        x,y = new_buff
+        if not len(x) == len(y):
+          return self.next()
         return new_buff
       else:
         self.current_thread_index+=1
