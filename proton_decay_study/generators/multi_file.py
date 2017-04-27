@@ -78,6 +78,8 @@ class MultiFileDataGenerator(BaseDataGenerator):
       if self.file_index<len(self._files):
         self.logger.info("Now moving to next file: {}".format(self._files[self.file_index]))
       self.current_index = remainder
+      if len(x) == 0:
+        return next(self)
       return (x,y)
 
     x = self._files[self.file_index][self._dataset][self.current_index:self.current_index+self.batch_size]
