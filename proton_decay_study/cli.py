@@ -7,6 +7,10 @@ import logging
 import tensorflow
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+import signal
+import sys
+
+
 
 @click.command()
 def main():
@@ -28,6 +32,14 @@ def standard_vgg_training(file_list):
   open('history.json','w').write(str(training_output))
   logger.info("Done.")
 
+
+_model = None
+def signal_handler(signal, frame):
+  global _model
+  if _model is not None:
+    _model.save('interrupted_output.h5')
+  sys.exit(0)
+
 @click.command()
 @click.argument('--steps', default=100, type=click.INT)
 @click.argument('--epochs', default=1000, type=click.INT)
@@ -39,9 +51,11 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
   sess = tf.Session()
+  signal.signal(signal.SIGINT, signal_handler)
 
   generator = MultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
   model = VGG16(generator)
+  _model = model
   if weights is not None:
     model.load_weights(weights)
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
