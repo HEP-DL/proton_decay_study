@@ -8,7 +8,6 @@ import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 from proton_decay_study.generators.threaded_multi_file import ThreadedMultiFileDataGenerator
-from proton_decays_study.callbacks.default import HistoryRecord
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 import signal
 import sys
