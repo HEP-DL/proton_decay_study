@@ -142,7 +142,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
                labelsetname, batch_size=1, nThreads=4):
 
     SingleFileThread.threadLock.acquire()
-    self._threads = SingleFileThread.startThreads(nthreads, datasetname,
+    self._threads = SingleFileThread.startThreads(nThreads, datasetname,
                                                   labelsetname, batch_size)
     SingleFileThread.queueLock.acquire()
     for config in datapaths:
