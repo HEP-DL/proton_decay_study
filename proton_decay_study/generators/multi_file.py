@@ -75,6 +75,8 @@ class MultiFileDataGenerator(BaseDataGenerator):
         y += self._files[next_file_index][self._labelset][:remainder]
       """
       self.file_index+=1
+      if self.file_index<len(self._files):
+        self.logger.info("Now moving to next file: {}".format(self._files[self.file_index]))
       self.current_index = remainder
       return (x,y)
 
