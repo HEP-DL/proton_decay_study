@@ -180,7 +180,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     # This ensures that files are all used up before they
     # are iterated over again.
     SingleFileThread.queueLock.acquire()
-    if len(SingleFileThread.queue) == 0:
+    if SingleFileThread.queue.empty():
       for i in self.datapaths:
         SingleFileThread.queue.put(i)
     SingleFileThread.queueLock.release()
