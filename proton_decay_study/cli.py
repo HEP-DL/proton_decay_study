@@ -57,7 +57,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   sess = tf.Session()
   signal.signal(signal.SIGINT, signal_handler)
 
-  generator = MultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
+  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires','label/type', batch_size=1)
   model = VGG16(generator)
   global _model
   _model = model

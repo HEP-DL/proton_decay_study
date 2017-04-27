@@ -155,6 +155,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
     self.datapaths = datapaths
     self.logger.info("Threaded multi file generator ready for generation")
+    self.current_thread_index=0
 
   def __del__(self):
     SingleFileThread.threadLock.release()
@@ -190,13 +191,19 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
         SingleFileThread.queue.put(i)
     SingleFileThread.queueLock.release()
 
-    for thread in SingleFileThread.activeThreads:
+    tmp_buffer = None
+    while tmp_buffer is None:
+      if self.current_thread_index>= len(SingleFileThread.activeThreads):
+        self.current_thread_index=0
+      thread = SingleFileThread.activeThreads[self.current_thread_index]
       thread.single_thread_lock.acquire()
       if thread._buffer is not None:
         new_buff = thread._buffer
         thread._buffer = None
         thread.single_thread_lock.release()
         return new_buff
+      else:
+        self.current_thread_index+=1
       thread.single_thread_lock.release()
     self.logger.warning("Threaded buffer found queue is empty. Trying again...")
     return self.next()
