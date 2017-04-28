@@ -1,7 +1,8 @@
-import history
 import json
+from keras.callbacks import Callback
+import keras
 
-class HistoryRecord(keras.callbacks.Callback):
+class HistoryRecord(Callback):
     def on_train_begin(self, logs={}):
         self.losses = []
         self.accuracy =[]
