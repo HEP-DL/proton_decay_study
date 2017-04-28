@@ -87,5 +87,5 @@ tqdm==4.11.2
 traitlets==4.3.2
 wcwidth==0.1.7
 webencodings==0.5
-whichcraft==0.4.0
+whichcraft==0.4.1
 widgetsnbextension==2.0.0
