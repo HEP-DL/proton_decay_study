@@ -31,7 +31,7 @@ Jinja2==2.9.6
 jinja2-time==0.2.0
 jsonschema==2.6.0
 jupyter==1.0.0
-jupyter-client==5.0.0
+jupyter-client==5.0.1
 jupyter-console==5.1.0
 jupyter-core==4.3.0
 Keras==2.0.3
