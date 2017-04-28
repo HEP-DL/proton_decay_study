@@ -13,6 +13,7 @@ from contextlib import contextmanager
 from click.testing import CliRunner
 
 from proton_decay_study import cli
+import unittest
 
 
 @pytest.fixture
@@ -36,7 +37,6 @@ def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main)
     assert result.exit_code == 0
-    assert 'proton_decay_study.cli.main' in result.output
     help_result = runner.invoke(cli.main, ['--help'])
     assert help_result.exit_code == 0
     assert '--help  Show this message and exit.' in help_result.output
@@ -56,7 +56,6 @@ class TestProton_decay_study(unittest.TestCase):
         runner = CliRunner()
         result = runner.invoke(cli.main)
         assert result.exit_code == 0
-        assert 'proton_decay_study.cli.main' in result.output
         help_result = runner.invoke(cli.main, ['--help'])
         assert help_result.exit_code == 0
         assert '--help  Show this message and exit.' in help_result.output

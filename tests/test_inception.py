@@ -7,6 +7,7 @@ from contextlib import contextmanager
 from click.testing import CliRunner
 
 from proton_decay_study import cli
+import unittest
 
 
 class TestInception(unittest.TestCase):
