@@ -8,6 +8,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   installation
+   usage
+   modules
 
 
 Indices and tables
