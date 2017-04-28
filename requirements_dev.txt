@@ -86,6 +86,6 @@ tornado==4.4.3
 tqdm==4.11.2
 traitlets==4.3.2
 wcwidth==0.1.7
-webencodings==0.5
+webencodings==0.5.1
 whichcraft==0.4.0
 widgetsnbextension==2.0.0
