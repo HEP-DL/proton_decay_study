@@ -49,7 +49,7 @@ packaging==16.8
 pandas==0.19.2
 pandocfilters==1.4.1
 pathlib2==2.2.1
-pbr==2.0.0
+pbr==3.0.0
 pexpect==4.2.1
 pickleshare==0.7.4
 Pillow==4.1.0
