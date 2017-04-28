@@ -1,4 +1,3 @@
-import history
 import json
 from keras.callbacks import Callback
 import keras
