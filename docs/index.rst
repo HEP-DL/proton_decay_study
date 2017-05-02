@@ -11,6 +11,7 @@ Contents:
    installation
    usage
    modules
+   contributions
 
 
 Indices and tables

@@ -32,7 +32,6 @@ def test_content(response):
     # assert 'GitHub' in BeautifulSoup(response.content).title.string
 
 
-
 def test_command_line_interface():
     runner = CliRunner()
     result = runner.invoke(cli.main)

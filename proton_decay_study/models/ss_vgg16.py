@@ -18,62 +18,57 @@ class VGG16(Model):
     self._input = Input(shape=generator.output)
     self.logger.info(self._input.shape)
 
-    layer = Conv2D(32, 3, activation='relu', padding='same', data_format='channels_first',
+    layer = Conv2D(32, 3, activation='relu', padding='same', 
                           name='block1_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = Conv2D(32, 3, activation='relu', padding='same', data_format='channels_first' ,
+    layer = Conv2D(32, 3, activation='relu', padding='same', 
                           name='block1_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling2D((2, 2), strides=(2, 2),  data_format='channels_first',
-                          name='block1_pool')(layer)
+    layer = MaxPooling2D((1, 2), strides=(2, 2), name='block1_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv2D(64, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(64, 3, activation='relu', padding='same', 
                           name='block2_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(64, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(64, 3, activation='relu', padding='same', 
                           name='block2_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling2D((2, 2), strides=(2, 2),  data_format='channels_first', 
-                          name='block2_pool')(layer)
+    layer = MaxPooling2D((1, 2), strides=(2, 2), name='block2_pool')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(128, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(128, 3, activation='relu', padding='same', 
                           name='block3_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(128, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(128, 3, activation='relu', padding='same',
                           name='block3_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(128, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(128, 3, activation='relu', padding='same', 
                           name='block3_conv3')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), data_format='channels_first',
-                          name='block3_pool')(layer)
+    layer = MaxPooling2D((1, 2), strides=(2, 2), name='block3_pool')(layer)
 
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block4_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block4_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block4_conv3')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), data_format='channels_first',
-                          name='block4_pool')(layer)
+    layer = MaxPooling2D((1, 2), strides=(2, 2), name='block4_pool')(layer)
 
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block5_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block5_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same', 
                           name='block5_conv3')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling2D((2, 2), strides=(2, 2), data_format='channels_first',
-                          name='block5_pool')(layer)
+    layer = MaxPooling2D((1, 2), strides=(2, 2), name='block5_pool')(layer)
 
     # Classification block
     self.logger.info(layer.shape)
@@ -85,3 +80,5 @@ class VGG16(Model):
     super(VGG16, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
     self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
+
+

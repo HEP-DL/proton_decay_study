@@ -146,6 +146,15 @@ def test_threaded_file_input(n_gen, file_list):
   logger.info("Done.")
 
 
+@click.command()
+@click.argument('input_file')
+@click.argument('output_file', nargs=1)
+def plot_model():
+  from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+  gen = MultiFileDataGenerator(['../prod_pdk_nubarkplus_49.h5'],'image/rawdigits','label/type')
+  from proton_decay_study.models.vgg16 import VGG16
+  from keras.utils.vis_utils import plot_model
+  plot_model(model, show_shapes=True, to_file="vgg16.png")
 
 if __name__ == "__main__":
     main()
