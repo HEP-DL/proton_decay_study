@@ -21,6 +21,7 @@ class SingleFileDataGenerator(BaseDataGenerator):
     return self._dataset.shape[0]
 
   def next(self):
+    self.logger.debug("Getting next single file dataset")
     if self.current_index>= len(self):
         self.logger.info("Reusing Data at Size: {}".format(len(self)))
         self.current_index = 0

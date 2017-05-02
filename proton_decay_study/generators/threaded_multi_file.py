@@ -23,7 +23,7 @@ class SingleFileThread(threading.Thread):
   __ThreadExitFlag__ = 1
 
   # Holds the current thread queue
-  queue = Queue.Queue(100000)
+  queue = Queue.Queue(10000)
 
   # Locks the thread queue
   queueLock = threading.Lock()
@@ -87,12 +87,11 @@ class SingleFileThread(threading.Thread):
           try:
             self.single_thread_lock.acquire()
             self._buffer  = self._filegen.next()
-            self.single_thread_lock.release()
           except StopIteration:
             self.logger.warning("Hit Stop Iteration")
             self._buffer  = None
-            self.single_thread_lock.release()
             self._filegen = None
+          self.single_thread_lock.release()
         except Exception:
           exc_type, exc_value, exc_traceback = sys.exc_info()
           self.logger.error(repr(traceback.format_exception(exc_type, exc_value,
@@ -207,9 +206,11 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
         thread._buffer = None
         thread.single_thread_lock.release()
         if new_buff is None:
+          self.logger.warning("Found null dataset")
           return self.next()
         x,y = new_buff
         if not len(x) == len(y):
+          self.logger.warning("Found incorrect dataset size")
           return self.next()
         return new_buff
       else:
