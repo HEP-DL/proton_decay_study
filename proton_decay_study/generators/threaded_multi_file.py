@@ -146,7 +146,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
   logger = logging.getLogger("pdk.gen.threaded_multi")
 
   def __init__(self, datapaths, datasetname, 
-               labelsetname, batch_size=1, nThreads=4):
+               labelsetname, batch_size=1, nThreads=2):
 
     SingleFileThread.threadLock.acquire()
     self._threads = SingleFileThread.startThreads(nThreads, datasetname,
