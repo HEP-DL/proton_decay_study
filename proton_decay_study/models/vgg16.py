@@ -63,13 +63,13 @@ class VGG16(Model):
                           name='block4_pool')(layer)
 
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
                           name='block5_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
                           name='block5_conv2')(layer)
     self.logger.info(layer.shape)
-    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first'
+    layer = Conv2D(256, 3, activation='relu', padding='same',  data_format='channels_first',
                           name='block5_conv3')(layer)
     self.logger.info(layer.shape)
     layer = MaxPooling2D((2, 2), strides=(2, 2), data_format='channels_first',
