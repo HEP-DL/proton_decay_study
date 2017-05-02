@@ -14,7 +14,7 @@ pathlib2==2.2.1
 pbr==3.0.0
 pexpect==4.2.1
 Pillow==4.1.1
-protobuf==3.2.0
+protobuf==3.3.0
 Pygments==2.2.0
 python-dateutil==2.6.0
 PyYAML==3.12
