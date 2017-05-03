@@ -47,6 +47,7 @@ class Gen3D(BaseDataGenerator):
     return sum([i[self._dataset].shape[0] for i in self._files] )
 
   def next(self):
+    self.logger.debug("Getting called in next")
     """
       This should iterate over both files and datasets within a file.
     """
