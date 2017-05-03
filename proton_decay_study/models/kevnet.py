@@ -49,7 +49,7 @@ class Kevnet(Model):
     #self.logger.info(layer.shape)
     layer = Flatten(name='flatten')(layer)
     #layer = Dense(1024, activation='relu', name='fc1')(layer)
-    layer = Dense(1024, activation='relu', name='fc2')(layer)
+    layer = Dense(256, activation='relu', name='fc2')(layer)
     layer = Dense(generator.input, activation='softmax', name='predictions')(layer)
     self.logger.info(layer.shape)
 
