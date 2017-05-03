@@ -66,21 +66,16 @@ class Gen3D(BaseDataGenerator):
       self.file_index = 0 
       self.current_index = 0
     if self.current_index+self.batch_size>self.current_file[self._dataset].shape[0]:
+      self.logger.info("Stitching together files")
       """
         This is the rare case of stitching together more than 1 file by crossing the boundary.
       """
       remainder = abs(self.current_file[self._dataset].shape[0]- self.current_index)
       self.logger.info("Crossing file boundary with remainder: {}".format(remainder))
-      x =  self.current_file[self._dataset][self.current_index:]
+      tmp_x =  self.current_file[self._dataset][self.current_index:]
+      x = np.ndarray(shape=(1, tmp_x.shape[0],  tmp_x.shape[1],  tmp_x.shape[2],  tmp_x.shape[3]))
+      x[0] = tmp_x 
       y =  self.current_file[self._labelset][self.current_index:]
-      """ TODO: Fix this, Kevin
-      if remainder>0 :
-        next_file_index = self.[current]+1
-        if next_file_index>= len(self._files):
-          next_file_index=0
-        x += self._files[next_file_index][self._dataset][:remainder]
-        y += self._files[next_file_index][self._labelset][:remainder]
-      """
       self.file_index+=1
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
