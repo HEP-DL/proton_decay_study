@@ -37,7 +37,8 @@ setup(
             'vgg_training=proton_decay_study.cli:standard_vgg_training',
             'kjw_train=proton_decay_study.cli:advanced_vgg_training',
             'test_file_input=proton_decay_study.cli:test_file_input',
-            'test_threaded_files=proton_decay_study.cli:test_threaded_file_input'
+            'test_threaded_files=proton_decay_study.cli:test_threaded_file_input',
+            'train_kevnet=proton_decay_study.cli:train_kevnet'
         ]
     },
     include_package_data=True,

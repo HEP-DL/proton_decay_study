@@ -158,5 +158,47 @@ def plot_model():
   from keras.utils.vis_utils import plot_model
   plot_model(model, show_shapes=True, to_file="vgg16.png")
 
+
+@click.command()
+@click.option('--steps', default=1000, type=click.INT)
+@click.option('--epochs', default=1000, type=click.INT)
+@click.option('--weights',default=None, type=click.Path(exists=True))
+@click.option('--history', default='history.json')
+@click.option('--output',default='stage1.h5')
+@click.argument('file_list', nargs=-1)
+def train_kevnet(steps, epochs,weights, history, output, file_list):
+  from proton_decay_study.generators.gen3d import Gen3D
+  from proton_decay_study.models.kevnet import Kevnet
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+  sess = tf.Session()
+  signal.signal(signal.SIGINT, signal_handler)
+
+  generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
+  model = Kevnet(generator)
+  global _model
+  _model = model
+  if weights is not None:
+    model.load_weights(weights)
+  logging.info("Starting Training")
+  training_output = model.fit_generator(generator, steps_per_epoch = steps, 
+                                      epochs=epochs, 
+                                      workers=1,
+                                      callbacks=[
+                                        ModelCheckpoint(output, 
+                                          monitor='val_loss', 
+                                          verbose=0, 
+                                          save_best_only=True, 
+                                          save_weights_only=True, 
+                                          mode='auto', 
+                                          period=10)
+                                      ])
+  model.save(output)
+  open(history,'w').write(str(training_output))
+  logger.info("Done.")
+
+
+
+
 if __name__ == "__main__":
     main()
