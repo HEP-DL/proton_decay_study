@@ -7,7 +7,7 @@ import logging
 import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-from proton_decay_study.generators.threaded_multi_file import ThreadedMultiFileDataGenerator
+
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 import signal
 import sys
@@ -41,6 +41,7 @@ def standard_vgg_training(file_list):
                                   'accuracy':training_output['accuracy']})
   logger.info("Done.")
 
+"""
 _model = None
 def signal_handler(signal, frame):
   global _model
@@ -49,7 +50,7 @@ def signal_handler(signal, frame):
     _model.save('interrupted_output.h5')
     logging.info('Model Weights saved to interrupted_output.h5')
   sys.exit(0)
-
+"""
 
 @click.command()
 @click.option('--steps', default=1000, type=click.INT)
@@ -63,7 +64,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   logger = logging.getLogger()
   sess = tf.Session()
   signal.signal(signal.SIGINT, signal_handler)
-
+  from proton_decay_study.generators.threaded_multi_file import ThreadedMultiFileDataGenerator
   generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires',
                                              'label/type', batch_size=1)
   model = VGG16(generator)
@@ -173,10 +174,13 @@ def plot_model():
 def train_kevnet(steps, epochs,weights, history, output, file_list):
   from proton_decay_study.generators.gen3d import Gen3D
   from proton_decay_study.models.kevnet import Kevnet
+  import tensorflow as tf
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
-  sess = tf.Session()
-  signal.signal(signal.SIGINT, signal_handler)
+
+  init = tf.global_variables_initializer()
+  with tf.Session() as sess:
+    sess.run(init)
 
   generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
   model = Kevnet(generator)
@@ -188,8 +192,9 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs,
                                       workers=1,
-                                      verbose=2,
-                                      max_q_size=4,
+                                      verbose=0,
+                                      max_q_size=2,
+                                      pickle_safe=False,
                                       callbacks=[
                                         ModelCheckpoint(output, 
                                           monitor='val_loss', 
