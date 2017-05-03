@@ -183,7 +183,8 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   logging.info("Starting Training")
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs, 
-                                      workers=1,
+                                      workers=0,
+                                      max_q_size=4,
                                       callbacks=[
                                         ModelCheckpoint(output, 
                                           monitor='val_loss', 

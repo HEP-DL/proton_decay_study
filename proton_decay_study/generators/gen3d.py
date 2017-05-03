@@ -89,6 +89,7 @@ class Gen3D(BaseDataGenerator):
       self.current_index = remainder
       if len(x) == 0 or len(y)==0 or not len(x) == len(y):
         return next(self)
+      self.logger.debug("returning value")
       return (x,y)
     tmp_x = self.current_file[self._dataset][self.current_index:self.current_index+self.batch_size]
     x = np.ndarray(shape=(1, tmp_x.shape[0],  tmp_x.shape[1],  tmp_x.shape[2],  tmp_x.shape[3]))
@@ -97,4 +98,5 @@ class Gen3D(BaseDataGenerator):
     self.current_index+=self.batch_size
     if len(x) == 0 or len(y)==0 or not len(x) == len(y):
       return next(self)
+    self.logger.debug("returning value")
     return (x,y)
