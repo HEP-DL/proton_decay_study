@@ -73,6 +73,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   logging.info("Starting Training")
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs, 
+                                      workers=1,
                                       callbacks=[
                                         ModelCheckpoint(output, 
                                           monitor='val_loss', 

@@ -189,6 +189,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     # If the filename queue is empty, fill it back up again.
     # This ensures that files are all used up before they
     # are iterated over again.
+    self.logger.debug("Getting next")
     SingleFileThread.queueLock.acquire()
     if SingleFileThread.queue.empty():
       for i in self.datapaths:
