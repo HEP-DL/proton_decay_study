@@ -8,7 +8,7 @@ Keras>=2.0.0
 matplotlib==2.0.1
 mock==2.0.0
 numpy==1.12.1
-pandas==0.20.0
+pandas==0.20.1
 pandocfilters==1.4.1
 pathlib2==2.2.1
 pbr==3.0.0
