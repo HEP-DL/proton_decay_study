@@ -49,7 +49,7 @@ class Kevnet(Model):
                    data_format='channels_first',
                    name='block3_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((3, 5, 5), strides=(3,5, 5),  
+    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
                           name='block3_pool')(layer)
     self.logger.info(layer.shape)
