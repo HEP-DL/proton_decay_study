@@ -26,7 +26,7 @@ class Kevnet(Model):
                    data_format='channels_first',
                    name='block1_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  
+    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
                           name='block1_pool')(layer)
     self.logger.info(layer.shape)
@@ -38,7 +38,7 @@ class Kevnet(Model):
                    data_format='channels_first',
                    name='block2_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  
+    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
                           name='block2_pool')(layer)
     self.logger.info(layer.shape)
@@ -50,7 +50,7 @@ class Kevnet(Model):
                    data_format='channels_first',
                    name='block3_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((3, 2, 2), strides=(3,2, 2),  
+    layer = MaxPooling3D((3, 5, 5), strides=(3,5, 5),  
                           data_format='channels_first', 
                           name='block3_pool')(layer)
     self.logger.info(layer.shape)
@@ -62,7 +62,7 @@ class Kevnet(Model):
                    data_format='channels_first',
                    name='block4_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  
+    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
                           name='block4_pool')(layer)
     self.logger.info(layer.shape)

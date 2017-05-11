@@ -192,8 +192,8 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs,
                                       workers=1,
-                                      verbose=2,
-                                      max_q_size=2,
+                                      verbose=0,
+                                      max_q_size=4,
                                       pickle_safe=False,
                                       callbacks=[
                                         ModelCheckpoint(output, 
