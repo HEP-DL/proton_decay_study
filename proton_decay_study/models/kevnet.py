@@ -36,7 +36,7 @@ class Kevnet(Model):
     layer = Conv3D(128, (1,5,5), strides=(1,5,5), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
-                   name='block2_conv1')(self.layer)
+                   name='block2_conv1')(layer)
     self.logger.info(layer.shape)
     layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
@@ -46,7 +46,7 @@ class Kevnet(Model):
     layer = Conv3D(256, (3,5,5), strides=(3,5,5), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
-                   name='block3_conv1')(self.layer)
+                   name='block3_conv1')(layer)
     self.logger.info(layer.shape)
     layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
                           data_format='channels_first', 
@@ -55,22 +55,22 @@ class Kevnet(Model):
     layer = BatchNormalization(axis=2, name="block3_norm")(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(512, (1,5,5), strides=(1,5,5), 
+    layer = Conv3D(512, (1,3,3), strides=(1,3,3), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
-                   name='block4_conv1')(self.layer)
+                   name='block4_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
                           data_format='channels_first', 
                           name='block4_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(1024, (1,5,5), strides=(1,5,5), 
+    layer = Conv3D(1024, (1,3,3), strides=(1,3,3), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
-                   name='block5_conv1')(self.layer)
+                   name='block5_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 5, 5), strides=(1,5, 5),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
                           data_format='channels_first', 
                           name='block5_pool')(layer)
     self.logger.info(layer.shape)
