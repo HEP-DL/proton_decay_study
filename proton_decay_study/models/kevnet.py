@@ -21,56 +21,56 @@ class Kevnet(Model):
     self.logger.info(self._input)
     self.logger.info(self._input.shape)
 
-    layer = Conv3D(64, (1,3,3), strides=(1,3,3), 
+    layer = Conv3D(64, (1,5,5), strides=(1,4,4), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block1_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
+    layer = MaxPooling3D((1, 5, 3), strides=(1,4, 2),
                           data_format='channels_first', 
                           name='block1_pool')(layer)
     self.logger.info(layer.shape)
     layer = BatchNormalization(axis=2, name="block1_norm")(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(128, (1,3,3), strides=(1,3,3), 
+    layer = Conv3D(128, (1,3,3), strides=(1,2,2), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block2_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1,2, 2),  
                           data_format='channels_first', 
                           name='block2_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(256, (3,3,3), strides=(3,3,3), 
+    layer = Conv3D(256, (3,3,3), strides=(3,2,2), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block3_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1,2, 2),  
                           data_format='channels_first', 
                           name='block3_pool')(layer)
     self.logger.info(layer.shape)
     layer = BatchNormalization(axis=2, name="block3_norm")(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(512, (1,3,3), strides=(1,3,3), 
+    layer = Conv3D(512, (1,3,3), strides=(1,2,2), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block4_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1, 2, 2),  
                           data_format='channels_first', 
                           name='block4_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(1024, (1,3,3), strides=(1,3,3), 
+    layer = Conv3D(1024, (1,3,3), strides=(1,2,2), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block5_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 3, 3), strides=(1,3, 3),  
+    layer = MaxPooling3D((1, 3, 3), strides=(1,2, 2),  
                           data_format='channels_first', 
                           name='block5_pool')(layer)
     self.logger.info(layer.shape)
