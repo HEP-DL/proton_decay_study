@@ -5,10 +5,10 @@ configparser==3.5.0
 flake8==3.3.0
 future==0.16.0
 Keras>=2.0.0
-matplotlib==2.0.0
+matplotlib==2.0.2
 mock==2.0.0
 numpy==1.12.1
-pandas==0.19.2
+pandas==0.20.1
 pandocfilters==1.4.1
 pathlib2==2.2.1
 pbr==3.0.0
