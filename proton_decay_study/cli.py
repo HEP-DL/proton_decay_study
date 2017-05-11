@@ -192,7 +192,7 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs,
                                       workers=1,
-                                      verbose=0,
+                                      verbose=2,
                                       max_q_size=2,
                                       pickle_safe=False,
                                       callbacks=[
@@ -205,7 +205,9 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                           period=10)
                                       ])
   model.save(output)
-  open(history,'w').write(str(training_output))
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss']}
+  import json
+  open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
 
 

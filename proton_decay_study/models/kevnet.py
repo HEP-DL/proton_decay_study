@@ -21,9 +21,7 @@ class Kevnet(Model):
     self.logger.info(self._input)
     self.logger.info(self._input.shape)
 
-    # First block (atomic block)
-
-    layer = Conv3D(2, (1,9,5), strides=(1,9,5), 
+    layer = Conv3D(32, (1,5,5), strides=(1,5,5), 
                    activation='relu', padding='same', 
                    data_format='channels_first',
                    name='block1_conv1')(self._input)
@@ -35,18 +33,43 @@ class Kevnet(Model):
     layer = BatchNormalization(axis=2, name="block1_norm")(layer)
     self.logger.info(layer.shape)
 
-    """
-    layer = Conv3D(32, 3, activation='relu', padding='same',  data_format='channels_first',
-                          name='block2_conv1')(self._input)
+    layer = Conv3D(64, (1,5,5), strides=(1,5,5), 
+                   activation='relu', padding='same', 
+                   data_format='channels_first',
+                   name='block2_conv1')(self._input)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  data_format='channels_first', name='block2_pool')(layer)
+    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  
+                          data_format='channels_first', 
+                          name='block2_pool')(layer)
     self.logger.info(layer.shape)
-    layer = BatchNormalization(axis=2, name="block1_norm")(layer)
+    layer = BatchNormalization(axis=2, name="block2_norm")(layer)
     self.logger.info(layer.shape)
-    """
+
+    layer = Conv3D(128, (3,5,5), strides=(3,5,5), 
+                   activation='relu', padding='same', 
+                   data_format='channels_first',
+                   name='block3_conv1')(self._input)
+    self.logger.info(layer.shape)
+    layer = MaxPooling3D((3, 2, 2), strides=(3,2, 2),  
+                          data_format='channels_first', 
+                          name='block3_pool')(layer)
+    self.logger.info(layer.shape)
+    layer = BatchNormalization(axis=2, name="block3_norm")(layer)
+    self.logger.info(layer.shape)
+
+    layer = Conv3D(256, (1,5,5), strides=(1,5,5), 
+                   activation='relu', padding='same', 
+                   data_format='channels_first',
+                   name='block4_conv1')(self._input)
+    self.logger.info(layer.shape)
+    layer = MaxPooling3D((1, 2, 2), strides=(1,2, 2),  
+                          data_format='channels_first', 
+                          name='block4_pool')(layer)
+    self.logger.info(layer.shape)
+    layer = BatchNormalization(axis=2, name="block4_norm")(layer)
+    self.logger.info(layer.shape)
 
     # Classification block
-    #self.logger.info(layer.shape)
     layer = Flatten(name='flatten')(layer)
     #layer = Dense(1024, activation='relu', name='fc1')(layer)
     layer = Dense(256, activation='relu', name='fc2')(layer)
@@ -56,12 +79,6 @@ class Kevnet(Model):
     super(Kevnet, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
     self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
-
-
-
-
-
-    
 
 
 
