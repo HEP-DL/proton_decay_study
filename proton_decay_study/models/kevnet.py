@@ -32,6 +32,7 @@ class Kevnet(Model):
     self.logger.info(layer.shape)
     layer = BatchNormalization(axis=2, name="block1_norm")(layer)
     self.logger.info(layer.shape)
+    layer = Dropout(0.1)(layer)
 
     layer = Conv3D(64, (1,3,3), strides=(1,2,2), 
                    activation='relu', padding='same', 
@@ -54,6 +55,7 @@ class Kevnet(Model):
     self.logger.info(layer.shape)
     layer = BatchNormalization(axis=2, name="block3_norm")(layer)
     self.logger.info(layer.shape)
+    layer = Dropout(0.1)(layer)
 
     layer = Conv3D(256, (1,3,3), strides=(1,2,2), 
                    activation='relu', padding='same', 
@@ -74,6 +76,7 @@ class Kevnet(Model):
                           data_format='channels_first', 
                           name='block5_pool')(layer)
     self.logger.info(layer.shape)
+    layer = Dropout(0.1)(layer)
 
     # Classification block
     layer = Flatten(name='flatten')(layer)
