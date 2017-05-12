@@ -11,6 +11,7 @@ from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 import signal
 import sys
+import os
 
 
 @click.command()
@@ -196,7 +197,7 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                       max_q_size=8,
                                       pickle_safe=False,
                                       callbacks=[
-                                        ModelCheckpoint(os.path.join('/tmp',output), 
+                                        ModelCheckpoint(output, 
                                           monitor='loss', 
                                           verbose=1, 
                                           save_best_only=True, 
