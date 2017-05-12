@@ -196,9 +196,9 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                       max_q_size=8,
                                       pickle_safe=False,
                                       callbacks=[
-                                        ModelCheckpoint(output, 
-                                          monitor='val_loss', 
-                                          verbose=0, 
+                                        ModelCheckpoint(os.path.join('/tmp',output), 
+                                          monitor='loss', 
+                                          verbose=1, 
                                           save_best_only=True, 
                                           save_weights_only=True, 
                                           mode='auto', 
