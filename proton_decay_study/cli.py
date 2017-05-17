@@ -222,7 +222,7 @@ def make_kevnet_featuremap(input, weights):
   logger = logging.getLogger()
   generator = Gen3D([input], 'image/wires','label/type', batch_size=1)
   model = Kevnet(generator)
-  model.load_weights(weights)w
+  model.load_weights(weights)
   data = generator.next()
   vis = KevNetVisualizer(model, data)
   vis.initialize()
