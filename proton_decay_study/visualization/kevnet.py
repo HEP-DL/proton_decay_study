@@ -17,6 +17,8 @@ class KevNetVisualizer:
 
   def initialize(self):
     self.mkdir()
+    output_path = os.path.join("featuremaps", 'data'+".npy")
+    numpy.save(output_path, self.data)
 
   def mkdir(self):
     if not os.path.isdir("featuremaps"):
