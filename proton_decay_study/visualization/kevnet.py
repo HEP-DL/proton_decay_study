@@ -1,5 +1,6 @@
 from proton_decay_study.visualization.intermediate import IntermediateVisualizer
 import logging
+import os
 
 
 class KevNetVisualizer:
@@ -18,7 +19,6 @@ class KevNetVisualizer:
     self.mkdir()
 
   def mkdir(self):
-    import os
     if not os.path.isdir("featuremaps"):
       self.logger.info("Creating feature maps directory")
       os.mkdir("featuremaps")
