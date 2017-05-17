@@ -26,7 +26,7 @@ class KevNetVisualizer:
   def run(self):
     for layer in self.layers:
       self.logger.info("analyzing layer: "+layer)
-      vis = IntermediateVisualizer(self.model, layer, self.data)
+      vis = IntermediateVisualizer(self.model, layer, self.data[0])
       output = vis.infer()
       output_path = os.path.join("featuremaps", layer+".npy")
       numpy.save(output_path, output)
