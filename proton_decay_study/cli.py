@@ -211,7 +211,23 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
 
-
+@click.command()
+@click.option('--input', type=click.Path(exists=True))
+@click.option('--weights', type=click.Path(exists=True))
+def make_kevnet_featuremap(input, weights):
+  from proton_decay_study.generators.gen3d import Gen3D
+  from proton_decay_study.models.kevnet import Kevnet
+  from proton_decay_study.visualization.kevnet import KevNetVisualizer
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+  generator = Gen3D([input], 'image/wires','label/type', batch_size=1)
+  model = Kevnet(generator)
+  model.load_weights(weights)w
+  data = generator.next()
+  vis = KevNetVisualizer(model, data)
+  vis.initialize()
+  vis.run()
+  logger.info("Done.")
 
 
 if __name__ == "__main__":
