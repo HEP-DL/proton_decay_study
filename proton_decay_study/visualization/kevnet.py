@@ -1,7 +1,7 @@
 from proton_decay_study.visualization.intermediate import IntermediateVisualizer
 import logging
 import os
-
+import numpy
 
 class KevNetVisualizer:
   layers = ['block1_conv1',
