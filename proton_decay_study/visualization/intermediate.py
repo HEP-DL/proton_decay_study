@@ -7,4 +7,3 @@ class IntermediateVisualizer(Model):
                                  outputs=model.get_layer(layer_name).output)
   def infer(self):
     return self.predict(self.data)
-
