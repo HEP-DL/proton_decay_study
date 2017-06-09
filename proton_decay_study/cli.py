@@ -215,12 +215,12 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
 @click.option('--input', type=click.Path(exists=True))
 @click.option('--weights', type=click.Path(exists=True))
 def make_kevnet_featuremap(input, weights):
-  from proton_decay_study.generators.gen3d import Gen3D
+  from proton_decay_study.generators.gen3d import Gen3D, Gen3DRandom
   from proton_decay_study.models.kevnet import Kevnet
   from proton_decay_study.visualization.kevnet import KevNetVisualizer
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
-  generator = Gen3D([input], 'image/wires','label/type', batch_size=1)
+  generator = Gen3DRandom([input], 'image/wires','label/type', batch_size=1)
   model = Kevnet(generator)
   model.load_weights(weights)
   data = generator.next()

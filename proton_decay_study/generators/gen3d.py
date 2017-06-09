@@ -93,3 +93,13 @@ class Gen3D(BaseDataGenerator):
     if len(x) == 0 or len(y)==0 or not len(x) == len(y):
       return next(self)
     return (x,y)
+
+import random
+
+
+class Gen3DRandom(Gen3D):
+  def __init__(self, datapaths, datasetname, 
+               labelsetname, batch_size=10):
+    super(Gen3DRandom, self).__init__(datapaths, datasetname, 
+               labelsetname, batch_size)
+    random.shuffle(self._files)
