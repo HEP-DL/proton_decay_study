@@ -14,7 +14,7 @@ dev_reqs = [str(ir.req) for ir in parse_requirements('requirements_dev.txt',
 
 setup(
     name='proton_decay_study',
-    version='0.1.0',
+    version='0.1.1',
     description="Looks for proton decay. USING NEURAL NETWORKS",
     long_description="""
         Top-level code base for CNN study of LArTPC data for proton decay.
