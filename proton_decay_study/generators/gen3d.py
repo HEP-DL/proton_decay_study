@@ -102,4 +102,5 @@ class Gen3DRandom(Gen3D):
                labelsetname, batch_size=10):
     super(Gen3DRandom, self).__init__(datapaths, datasetname, 
                labelsetname, batch_size)
-    random.shuffle(self._files)
+    for i in range(7):
+      random.shuffle(self._files)
