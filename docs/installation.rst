@@ -5,14 +5,14 @@ As far as pre-requistes go, the big one is Tensorflow. We require `Tensorflow>=1
 
 The easiest way to install this package is by using pip:
 
-~~~ bash
-pip install git+https://github.com/HEP-DL/proton_decay_study
-~~~
+.. code-block:: bash
+
+  pip install git+https://github.com/HEP-DL/proton_decay_study
 
 If there is an existing installation, you can provide an upgrade flag:
 
-~~~ bash
-pip install git+https://github.com/HEP-DL/proton_decay_study
-~~~
+.. code-block:: bash
+
+  pip install git+https://github.com/HEP-DL/proton_decay_study
 
 
