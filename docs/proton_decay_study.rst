@@ -9,6 +9,7 @@ Subpackages
     proton_decay_study.callbacks
     proton_decay_study.generators
     proton_decay_study.models
+    proton_decay_study.visualization
 
 Submodules
 ----------
