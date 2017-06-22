@@ -14,7 +14,7 @@ dev_reqs = [str(ir.req) for ir in parse_requirements('requirements_dev.txt',
 
 setup(
     name='proton_decay_study',
-    version='0.1.0',
+    version='0.1.1',
     description="Looks for proton decay. USING NEURAL NETWORKS",
     long_description="""
         Top-level code base for CNN study of LArTPC data for proton decay.
@@ -33,9 +33,6 @@ setup(
                  'proton_decay_study'},
     entry_points={
         'console_scripts': [
-            'proton_decay_study=proton_decay_study.cli:main',
-            'vgg_training=proton_decay_study.cli:standard_vgg_training',
-            'kjw_train=proton_decay_study.cli:advanced_vgg_training',
             'test_file_input=proton_decay_study.cli:test_file_input',
             'test_threaded_files=proton_decay_study.cli:test_threaded_file_input',
             'train_kevnet=proton_decay_study.cli:train_kevnet',
