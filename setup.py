@@ -14,15 +14,15 @@ dev_reqs = [str(ir.req) for ir in parse_requirements('requirements_dev.txt',
 
 setup(
     name='proton_decay_study',
-    version='0.1.2',
+    version='0.2.0',
     description="Looks for proton decay. USING NEURAL NETWORKS",
     long_description="""
         Top-level code base for CNN study of LArTPC data for proton decay.
 
         This relies primarily on Kevlar and Keras with the Tensorflow backend.
 
-        Kevlar provides the data interface consumned by the generators. Keras and
-        tensorflow provide the framework used to train and utilize the networks.
+        Kevlar provides the data interface consumed by the generators. Keras and
+        Tensorflow provide the framework used to train and utilize the networks.
 
     """,
     author="Kevin Wierman",
