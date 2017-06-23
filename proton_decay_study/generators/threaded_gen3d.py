@@ -1,5 +1,5 @@
-from proton_decay_study.generators.base import BaseDataGenerator
-from proton_decay_study.generators.gen3d import Gen3D
+from .base import BaseDataGenerator
+from .single_file import SingleFileDataGenerator
 import logging
 import threading
 import Queue
