@@ -1,0 +1,220 @@
+\documentclass[journal, a4paper]{IEEEtran}
+
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{url}
+
+\usepackage{amsmath}    % From the American Mathematical Society
+% A popular package that provides many helpful commands
+% for dealing with mathematics. Note that the AMSmath
+% package sets \interdisplaylinepenalty to 10000 thus
+% preventing page breaks from occurring within multiline
+% equations. Use:
+%\interdisplaylinepenalty=2500
+% after loading amsmath to restore such page breaks
+% as IEEEtran.cls normally does. amsmath.sty is already
+% installed on most LaTeX systems. The latest version
+% and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/amslatex/math/
+
+
+
+% Other popular packages for formatting tables and equations include:
+
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty which improves the
+% LaTeX2e array and tabular environments to provide better appearances and
+% additional user controls. array.sty is already installed on most systems.
+% The latest version and documentation can be obtained at:
+% http://www.ctan.org/tex-archive/macros/latex/required/tools/
+
+% V1.6 of IEEEtran contains the IEEEeqnarray family of commands that can
+% be used to generate multiline equations as well as matrices, tables, etc.
+
+% Also of notable interest:
+% Scott Pakin's eqparbox package for creating (automatically sized) equal
+% width boxes. Available:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/supported/eqparbox/
+
+% *** Do not adjust lengths that control margins, column widths, etc. ***
+% *** Do not use packages that alter fonts (such as pslatex).         ***
+% There should be no need to do such things with IEEEtran.cls V1.6 and later.
+\usepackage[
+backend=biber,
+style=phys,
+sortlocale=de_DE,
+natbib=true,
+url=false, 
+doi=true,
+eprint=false
+]{biblatex}
+\addbibresource{NucleonDecay.bib}
+
+% Your document starts here!
+\begin{document}
+	
+	% Define document title and author
+	\title{Proton Decay Unidoc}
+	\author{Kevin Wierman}
+	\maketitle
+	
+	% Write abstract here
+	\begin{abstract}
+		Currently, this is empty but will contain the specific language we'll be using in future papers.
+	\end{abstract}
+	
+	% Each section begins with a \section{title} command
+	\section{Introduction}
+		Conservation of baryon number is “accidental”, i.e does not correspond to any known symmetry: its violation is predicted by almost all GUTs
+		
+	    TODO:  Need citation here
+
+		Proton (or bounded neutron) decay can occur only as a violation of baryon number, pointing to an indirect evidence for GUTs
+
+    TODO:  Once again, citation
+    
+    The golden channels:
+    \begin{enumerate}
+		\item  $p\rightarrow \overline \nu_\tau +K^+$    
+		\item $p\rightarrow e^+ + \pi^0$
+    \end{enumerate}
+	Different GUTs use different decay modes, and LAr may have different sensitivities to these.
+	
+	% Main Part
+	\section{Previous Work}
+		\subsection{T2K}
+
+		The summary of results can be found in the collaboration paper~\cite{Collaboration1998}.
+		
+		A much more detailed paper can be found in B. Viren's PhD thesis\cite{Viren2000}.
+		
+		Best limits on $\tau_{p\rightarrow e^+ + \pi^0}/B$ set by Super-Kamiokande at $5.4\times10^{33}$ years (90\%C.L.).
+		
+		This roughly goes as:
+		
+		\begin{equation}
+			\tau/B = \frac{N_0 \Delta t \epsilon}{n_{obs}-n_{bg}}
+		\end{equation}
+		
+		Where $N_0$ is the number of decay centers, $\Delta t$ is the amount of time being measured, and $n_{obs}-n_{bg}$ is the number of observed decays divided by the number of observed bg events.
+		Efficiency is measured as $\epsilon$ for the decay mode.
+		
+		Brett's thesis prefers to use the decay rate or inverse of this
+		
+		\begin{equation}
+		\Gamma = \frac{n}{NT\epsilon}
+		\end{equation}
+		
+		The language here differs a little.
+		
+		\subsection{$\mu$BooNE}
+		
+		The previous researcher leading up proton decay studies was Elena Gramellini. 
+		She frequently references Ed Kearns who has a ton of informative plots.
+		
+		This will a more comprehensive search of the microboone docdb.
+	
+	\section{Referencing the Software}
+		This section will be used to develop the language we'll be using to properly reference the software in LArSoft\cite{LArSoft2016}.
+		
+		
+	\section{The Goal}
+	
+	This is done following Brett Virren's thesis.
+	
+	
+	The confidence level for the limit on the decay rate, $\Gamma_{lim}$ can be calculated as,
+	
+	\begin{equation}
+		CL = A\int_0^{\Gamma_{lim}}d\Gamma\int_0^\infty db\int_0^\infty db_{MC}\int_0^{\infty}d\lambda\int_0^1 d\epsilon I(...)
+	\end{equation}
+	
+	Where,
+	
+	\begin{equation}
+		I(...) = \frac{b_{MC}^{n_b}(\Gamma\lambda \epsilon+b)^n}{b}
+		e^{-b_{MC}-\frac{(b_{MC}-bC)^2}{2\sigma_b^2}-\frac{(\lambda-\lambda_0)^2}{2\sigma^2_\lambda }-(\Gamma\lambda\epsilon+b)}
+	\end{equation}
+	Where
+	\begin{itemize}
+		\item $b_{MC}$, the true mean MC background rate.
+		\item $\Gamma$, the true decay rate of interest (integration parameter)
+		\item $\lambda = NT$, the true exposure
+		\item $b$, the true background rate (decay parameter)
+		\item $n$, the number of events observed
+		\item $\lambda_0$, the estimated exposure
+		\item $\sigma_\lambda$, the uncertainty in the estimated exposure
+		\item $C$, the ratio of MC events to data events.
+		\item $n_b$, the number of MC events passing the the proton decay selection criteria
+		\item $\epsilon$ The efficiency of detecting the decay products of this mode.
+	\end{itemize}
+	
+	Specifically, the parameters that need to be measured are:
+	\begin{itemize}
+		\item $n$, the number of events observed
+		\item $n_b$, the number of MC events passing the the proton decay selection criteria
+		\item $\sigma_b$ The estimated uncertainty in the MC background rate
+		\item $\lambda_0$, the estimated exposure
+		\item $\sigma_\lambda$, the uncertainty in the estimated exposure
+		\item $C$, the ratio of MC events to data events.$\equiv n/(n_b+n_o)$
+		\item $\epsilon_0$ Estimated efficiency
+		\item $\sigma_\epsilon$ Uncertainty in estimated efficiency
+	\end{itemize}	
+
+	The constant of proportionality, $A$ is found by setting $CL=1$ and $\Gamma_{lim}$ to $\infty$.
+	
+	The efficiency term missing from his paper is:
+	
+	\begin{equation}
+		P(\epsilon| \vec I) = e^{-(\epsilon-\epsilon_0)^2/2\sigma_{\epsilon}^2}
+	\end{equation}
+	
+	which should be in the integrand.
+	The estimated efficiency for each mode is found by dividing the number of proton decay MC events which pass all cuts by the number which pass the event sample cuts.
+	
+	For a given CL, evaluate the integral numerically using a minimization routine to obtain $\Gamma_{lim}$
+	
+	\section{General Method}
+	
+	This part follows Elena's reasoning
+	
+	\begin{enumerate}
+		\item Pick a decay mode (topology).
+		\item Evaluate the background processes that can contribute to identifying the decay products.
+		\item Define cuts for a given process which maximize the efficiency.
+		\item For these cuts, obtain:
+			\begin{itemize}
+				\item The MC background rate and uncertainty
+				\item The estimated exposure (fiducial cuts?)
+				\item The number of events in the data
+				\item The number of background events passing selection criteria in MC
+				\item the ratio of all MC events to all data events which pass selection criteria
+				\item The estimated efficiency
+			\end{itemize} 
+		\item Evaluate integral
+	\end{enumerate}
+	
+	\section{Backgrounds}
+
+		The big aspect behind this will be background identification.
+		
+		The cuts that were mentioned are:
+		
+		\begin{itemize}
+			\item production PID
+			\item No additional vertex activity
+			\item Proximity
+			\item Planarity
+			\item Total Energy deposited
+			\item Total Net Momentum
+			\item Fiducialization
+		\end{itemize}
+		
+		Elena's work was based around examining the MCC5 cosmics generation data sets.
+		A year ago, she was working on cuts.	
+	
+	\section{Conclusion}
+	This section summarizes the paper.
+	\printbibliography 
+
+\end{document}

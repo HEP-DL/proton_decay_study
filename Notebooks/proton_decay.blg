@@ -1,0 +1,17 @@
+[0] Config.pm:340> INFO - This is Biber 2.4
+[0] Config.pm:343> INFO - Logfile is 'proton_decay.blg'
+[43] biber:287> INFO - === Tue Oct 11, 2016, 16:14:54
+[137] Biber.pm:348> INFO - Reading 'proton_decay.bcf'
+[293] Biber.pm:742> INFO - Found 3 citekeys in bib section 0
+[299] Biber.pm:3151> INFO - Processing section 0
+[332] Biber.pm:3308> INFO - Looking for bibtex format file 'NucleonDecay.bib' for section 0
+[350] bibtex.pm:1113> INFO - Decoding LaTeX character macros into UTF-8
+[365] bibtex.pm:974> INFO - Found BibTeX data source 'NucleonDecay.bib'
+[400] Utils.pm:147> WARN - BibTeX subsystem: /tmp/Btp6TznmFl/NucleonDecay.bib_9108.utf8, line 6, warning: 172 characters of junk seen at toplevel
+[431] UCollate.pm:65> INFO - Overriding locale 'de_DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[431] UCollate.pm:65> INFO - Overriding locale 'de_DE' defaults 'variable = shifted' with 'variable = non-ignorable'
+[431] Biber.pm:3028> INFO - Sorting list 'none/global' of type 'entry' with scheme 'none' and locale 'de_DE'
+[431] Biber.pm:3032> INFO - No sort tailoring available for locale 'de_DE'
+[435] bbl.pm:519> INFO - Writing 'proton_decay.bbl' with encoding 'ascii'
+[468] bbl.pm:615> INFO - Output to proton_decay.bbl
+[468] Biber.pm:109> INFO - WARNINGS: 1

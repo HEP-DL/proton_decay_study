@@ -12,6 +12,14 @@ proton\_decay\_study\.generators\.base module
     :undoc-members:
     :show-inheritance:
 
+proton\_decay\_study\.generators\.gen3d module
+----------------------------------------------
+
+.. automodule:: proton_decay_study.generators.gen3d
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 proton\_decay\_study\.generators\.multi\_file module
 ----------------------------------------------------
 
@@ -24,6 +32,14 @@ proton\_decay\_study\.generators\.single\_file module
 -----------------------------------------------------
 
 .. automodule:: proton_decay_study.generators.single_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+proton\_decay\_study\.generators\.threaded\_gen3d module
+--------------------------------------------------------
+
+.. automodule:: proton_decay_study.generators.threaded_gen3d
     :members:
     :undoc-members:
     :show-inheritance:
