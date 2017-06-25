@@ -104,3 +104,6 @@ class Gen3DRandom(Gen3D):
                labelsetname, batch_size)
     for i in range(7):
       random.shuffle(self._files)
+
+
+class Gen3DMultiFileRandom()

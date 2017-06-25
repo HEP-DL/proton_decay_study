@@ -86,7 +86,7 @@ class Kevnet(Model):
 
     super(Kevnet, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
-    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
+    self.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
 
 
 
