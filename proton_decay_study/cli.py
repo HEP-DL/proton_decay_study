@@ -69,6 +69,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
   generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires',
                                              'label/type', batch_size=1)
   model = VGG16(generator)
+
   global _model
   _model = model
   if weights is not None:
@@ -154,15 +155,26 @@ def test_threaded_file_input(n_gen, file_list):
 
 
 @click.command()
-@click.argument('input_file')
-@click.argument('output_file', nargs=1)
-def plot_model():
+##@click.option('--input', default=None, type=click.Path(exists=True))
+@click.option('--model_wts', default=None, type=click.Path(exists=True))
+@click.argument('file_list', nargs=-1)
+def plot_model(model_wts, file_list):
   from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-  gen = MultiFileDataGenerator(['../prod_pdk_nubarkplus_49.h5'],
-                                'image/rawdigits','label/type')
   from proton_decay_study.models.vgg16 import VGG16
   from keras.utils.vis_utils import plot_model
-  plot_model(model, show_shapes=True, to_file="vgg16.png")
+  from proton_decay_study.models.kevnet import Kevnet
+  from proton_decay_study.generators.gen3d import Gen3D
+  import pdb
+##  pdb.set_trace()
+##  from keras.models import load_model
+## This falls over, not liking Kevnet.
+##  model = load_model('./ectest.h5')
+  
+  generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
+  model = Kevnet(generator)
+  model.load_weights(model_wts)
+
+  plot_model(model, show_shapes=True, to_file='eckevnet.png')
 
 
 @click.command()
@@ -180,7 +192,8 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   logger = logging.getLogger()
 
   init = tf.global_variables_initializer()
-  with tf.Session() as sess:
+
+  with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
     sess.run(init)
 
   generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)

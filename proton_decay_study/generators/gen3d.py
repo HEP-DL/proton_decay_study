@@ -21,6 +21,7 @@ class Gen3D(BaseDataGenerator):
     self.logger.info("Initializing h5 file object with value: {}".format(self._files[self.current_index]))
     self.current_file = h5py.File(self._files[self.current_index], 'r')
 
+
   @property
   def output(self):
     current_index= self.current_index
