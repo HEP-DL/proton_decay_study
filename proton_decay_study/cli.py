@@ -165,7 +165,7 @@ def plot_model(model_wts, file_list):
   from proton_decay_study.models.kevnet import Kevnet
   from proton_decay_study.generators.gen3d import Gen3D
   import pdb
-##  pdb.set_trace()
+
 ##  from keras.models import load_model
 ## This falls over, not liking Kevnet.
 ##  model = load_model('./ectest.h5')
@@ -174,7 +174,23 @@ def plot_model(model_wts, file_list):
   model = Kevnet(generator)
   model.load_weights(model_wts)
 
-  plot_model(model, show_shapes=True, to_file='eckevnet.png')
+## This works after: pip install pyparsing==1.5.7; pip install pydot==1.0.28
+#  plot_model(model, show_shapes=True, to_file='eckevnet.png')
+
+
+### Below all fails, though, cuz sysadmin must install tk-inter before I can even pip install py-tkinter
+#  import matplotlib.pyplot as plt
+  import json
+##  pdb.set_trace()
+
+  with open("./jason.json") as json_file:
+      jd = json.load(json_file)
+
+#  plt(jd["epoch"],jd["acc"],label="insample accuracy")
+#  plt(epoch,loss,label="insample loss")
+#  plt.legend()
+#  plt.plot()
+#  plt.savefig('pi+_acc-loss.png')
 
 
 @click.command()
