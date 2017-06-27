@@ -199,10 +199,10 @@ def plot_model(model_wts, file_list):
 @click.option('--weights',default=None, type=click.Path(exists=True))
 @click.option('--history', default='history.json')
 @click.option('--output',default='stage1.h5')
-#@click.argument('file_valid_list', nargs=1)
+@click.argument('file_valid_list', nargs=1)
 @click.argument('file_list', nargs=-1)
 
-def train_kevnet(steps, epochs,weights, history, output, file_list):
+def train_kevnet(steps, epochs,weights, history, output, file_valid_list, file_list):
   from proton_decay_study.generators.gen3d import Gen3D
   from proton_decay_study.models.kevnet import Kevnet
   import tensorflow as tf
@@ -242,7 +242,9 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                           period=10)
                                       ])
   model.save(output)
-  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss']}
+  import pdb
+#  pdb.set_trace()
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions':model.predict_generator(validation_generator,len(validation_generator))}
   import json
   open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
