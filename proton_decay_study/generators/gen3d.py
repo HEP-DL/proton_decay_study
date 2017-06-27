@@ -45,7 +45,8 @@ class Gen3D(BaseDataGenerator):
       Iterates over files to create the total sum length
       of the datasets in each file.
     """
-    return sum([i[self._dataset].shape[0] for i in self._files] )
+    return sum([h5py.File(i,'r')[self._dataset].shape[0] for i in self._files] )
+
 
   def next(self):
     """

@@ -85,7 +85,7 @@ def advanced_vgg_training(steps, epochs,weights, history, output, file_list):
                                           save_best_only=True, 
                                           save_weights_only=True, 
                                           mode='auto', 
-                                          period=10)
+                                          period=1)
                                       ])
   model.save(output)
   open(history,'w').write(str(training_output))
@@ -199,7 +199,9 @@ def plot_model(model_wts, file_list):
 @click.option('--weights',default=None, type=click.Path(exists=True))
 @click.option('--history', default='history.json')
 @click.option('--output',default='stage1.h5')
+#@click.argument('file_valid_list', nargs=1)
 @click.argument('file_list', nargs=-1)
+
 def train_kevnet(steps, epochs,weights, history, output, file_list):
   from proton_decay_study.generators.gen3d import Gen3D
   from proton_decay_study.models.kevnet import Kevnet
@@ -213,6 +215,8 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
     sess.run(init)
 
   generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
+  validation_generator = Gen3D(file_list, 'image/wires', 'label/type', batch_size=1)
+
   model = Kevnet(generator)
   global _model
   _model = model
@@ -225,6 +229,8 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                       verbose=1,
                                       max_q_size=8,
                                       pickle_safe=False,
+                                      validation_data=validation_generator,
+                                      validation_steps = steps,
                                       callbacks=[
                                         ModelCheckpoint(output, 
                                           monitor='loss', 
@@ -232,6 +238,7 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                           save_best_only=True, 
                                           save_weights_only=True, 
                                           mode='auto', 
+
                                           period=10)
                                       ])
   model.save(output)
