@@ -16,7 +16,7 @@ clean-pyc:
 	find . -name '__pycache__' -exec rm -fr {} +
 
 lint:
-	flake8 proton_decay_study tests
+	py.test --flake8
 
 test:
 	pytest
