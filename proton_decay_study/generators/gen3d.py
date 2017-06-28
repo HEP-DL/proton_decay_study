@@ -12,7 +12,17 @@ class Gen3D(BaseDataGenerator):
   logger = logging.getLogger("pdk.gen.gen3d")
 
   def __init__(self, datapaths, datasetname,
-               labelsetname, batch_size=10):
+               labelsetname, batch_size=1):
+    """
+      Default generator.
+
+      Args:
+        datapaths: A list of filenames.
+        datasetname: String representing dataset key in file for data.
+        labelsetname: String representing dataset key in file for labels.
+        batch_size: Integer of number of data frames to produce at once.
+
+    """
     self._files = [i for i in datapaths]
 
     self._dataset = datasetname
@@ -24,6 +34,12 @@ class Gen3D(BaseDataGenerator):
 
   @property
   def output(self):
+    """
+      Output shape property
+
+      Returns: A tuple representing the shape of the first data
+      this picks out of the file
+    """
     current_index = self.current_index
     file_index = self.file_index
     x, y = self.next()
@@ -33,6 +49,11 @@ class Gen3D(BaseDataGenerator):
 
   @property
   def input(self):
+    """
+      Input shape property
+
+      Returns: A tuple representing
+    """
     current_index = self.current_index
     file_index = self.file_index
     x, y = self.next()

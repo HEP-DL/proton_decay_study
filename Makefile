@@ -33,3 +33,6 @@ install: clean
 
 uninstall:
 	pip uninstall proton_decay_study
+
+docserver:
+	cd docs/_build/html && python -m SimpleHTTPServer 9000

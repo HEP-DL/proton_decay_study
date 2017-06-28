@@ -1,8 +1,14 @@
+"""
+    Defines the default callbacks for usage in the mod:`proton_decay_study`
+"""
 import json
 from keras.callbacks import Callback
 
 
 class HistoryRecord(Callback):
+    """
+    This is a stub in place for working on recording the training history
+    """
     def on_train_begin(self, logs={}):
         self.losses = []
         self.accuracy = []
