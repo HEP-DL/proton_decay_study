@@ -199,10 +199,9 @@ def plot_model(model_wts, file_list):
 @click.option('--weights',default=None, type=click.Path(exists=True))
 @click.option('--history', default='history.json')
 @click.option('--output',default='stage1.h5')
-@click.argument('file_valid_list', nargs=1)
 @click.argument('file_list', nargs=-1)
 
-def train_kevnet(steps, epochs,weights, history, output, file_valid_list, file_list):
+def train_kevnet(steps, epochs,weights, history, output, file_list):
   from proton_decay_study.generators.gen3d import Gen3D
   from proton_decay_study.models.kevnet import Kevnet
   import tensorflow as tf
@@ -214,8 +213,12 @@ def train_kevnet(steps, epochs,weights, history, output, file_valid_list, file_l
   with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
     sess.run(init)
 
+  import pdb
+  
   generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
-  validation_generator = Gen3D(file_list, 'image/wires', 'label/type', batch_size=1)
+#  pdb.set_trace()
+  end = max(len(file_list)-10,0)
+  validation_generator = Gen3D(file_list[end:], 'image/wires', 'label/type', batch_size=1)
 
   model = Kevnet(generator)
   global _model
@@ -242,9 +245,10 @@ def train_kevnet(steps, epochs,weights, history, output, file_valid_list, file_l
                                           period=10)
                                       ])
   model.save(output)
-  import pdb
-#  pdb.set_trace()
-  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions':model.predict_generator(validation_generator,len(validation_generator))}
+
+  pdb.set_trace()
+  pred100 = model.predict_generator(validation_generator,10) # 100 event predictions from last iteration of model -- I think
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': pred100.tolist()} # len(validation_generator)
   import json
   open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
