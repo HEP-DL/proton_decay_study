@@ -13,5 +13,4 @@ class capetian_modifier(Kevnet):
 
 
 class percussive_treasurership(Kevnet):
-  logger = loggin.getLogger(pdk.kevnet.percussive_treasurership)
-  
+  logger = logging.getLogger("pdk.kevnet.percussive_treasurership")
