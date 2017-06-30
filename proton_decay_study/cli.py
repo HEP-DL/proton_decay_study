@@ -201,9 +201,9 @@ def plot_model(model_wts, file_list):
 @click.option('--output',default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 
-def train_kevnet(steps, epochs,weights, history, output, file_list):
+def train_nbn(steps, epochs,weights, history, output, file_list):
   from proton_decay_study.generators.gen3d import Gen3D
-  from proton_decay_study.models.kevnet import Kevnet
+  from proton_decay_study.models.nothinbutnet import Nothinbutnet
   import tensorflow as tf
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
@@ -220,7 +220,7 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
   end = max(len(file_list)-10,0)
   validation_generator = Gen3D(file_list[end:], 'image/wires', 'label/type', batch_size=1)
 
-  model = Kevnet(generator)
+  model = Nothinbutnet(generator)
   global _model
   _model = model
   if weights is not None:
@@ -246,7 +246,7 @@ def train_kevnet(steps, epochs,weights, history, output, file_list):
                                       ])
   model.save(output)
 
-  pdb.set_trace()
+#  pdb.set_trace()
   pred100 = model.predict_generator(validation_generator,10) # 100 event predictions from last iteration of model -- I think
   training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': pred100.tolist()} # len(validation_generator)
   import json
@@ -270,6 +270,8 @@ def make_kevnet_featuremap(input, weights):
   vis.initialize()
   vis.run()
   logger.info("Done.")
+
+
 
 
 if __name__ == "__main__":
