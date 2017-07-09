@@ -20,7 +20,7 @@ python-dateutil==2.6.0
 PyYAML==3.12
 pyzmq==16.0.2
 scipy==0.19.1
-seaborn==0.7.1
+seaborn==0.8
 Sphinx==1.6.3
 stevedore==1.23.0
 tensorflow # pyup: ignore 
