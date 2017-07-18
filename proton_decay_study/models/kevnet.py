@@ -15,7 +15,7 @@ class Kevnet(Model):
     layer = self.assemble(generator)
     super(Kevnet, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
-    self.compile(loss='categorical_crossentropy', optimizer='sgd',
+    self.compile(loss='mean_squared_error', optimizer='sgd',
                  metrics=['accuracy'])
 
   def assemble(self, generator):
