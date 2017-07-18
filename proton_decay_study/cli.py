@@ -81,7 +81,7 @@ def test_threaded_file_input(n_gen, file_list):
 @click.option('--output', default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 def train_kevnet(steps, epochs, weights, history, output, file_list):
-  from proton_decay_study.generators.gen3d import Gen3D
+  from proton_decay_study.generators.gen3d import Gen3DRandom
   from proton_decay_study.models.kevnet import Kevnet
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
@@ -90,7 +90,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
   with tf.Session() as sess:
     sess.run(init)
 
-  generator = Gen3D(file_list, 'image/wires', 'label/type', batch_size=1)
+  generator = Gen3DRandom(file_list, 'image/wires', 'label/type', batch_size=1)
   model = Kevnet(generator)
   global _model
   _model = model
