@@ -42,7 +42,7 @@ setup(
     include_package_data=True,
     install_requires=reqs,
     license="MIT license",
-    zip_safe=False,
+    zip_safe=True,
     keywords='proton_decay_study',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
