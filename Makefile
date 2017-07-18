@@ -15,11 +15,8 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
 
-lint:
-	py.test --flake8
-
 test:
-	pytest
+	pytest --flake8
 
 docs:
 	rm -f docs/proton_decay_study.rst
