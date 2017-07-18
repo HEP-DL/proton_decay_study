@@ -93,7 +93,7 @@ class Gen3D(BaseDataGenerator):
                           tmp_x.shape[2], tmp_x.shape[3]))
     x[0] = tmp_x
     y = self.current_file[self._labelset][self.current_index:tmp_index]
-    y = np.copy(y, copy=True)
+    y = np.array(y, copy=True)
     self.current_index += self.batch_size
     if len(x) == 0 or len(y) == 0 or not len(x) == len(y):
       self.logger.warning("Encountered misshaped array")
