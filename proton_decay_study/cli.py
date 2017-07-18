@@ -109,7 +109,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                         epochs=epochs,
                                         workers=2,
                                         verbose=1,
-                                        max_q_size=2,
+                                        max_q_size=1,
                                         pickle_safe=False,
                                         callbacks=[model_checkpoint])
   model.save(output)
