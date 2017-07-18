@@ -10,4 +10,4 @@ protobuf==3.3.0
 requests==2.18.1
 scipy==0.19.1
 stevedore==1.25.0
-tensorboard # pyup: ignore
+
