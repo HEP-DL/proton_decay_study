@@ -85,10 +85,9 @@ class Gen3D(BaseDataGenerator):
     tmp_index = self.current_index + self.batch_size
     if tmp_index > self.current_file[self._dataset].shape[0]:
       # no longer allow stitching across files, remainder gets tossed
-      self.current_index += tmp_index
-      return self.next()
+      self.current_index += self.batch_size
+      return next(self)
     # now we are guaranteed a file with enough spaces for a full batch
-
     tmp_x = self.current_file[self._dataset][self.current_index:tmp_index]
     x = np.ndarray(shape=(1, tmp_x.shape[0], tmp_x.shape[1],
                           tmp_x.shape[2], tmp_x.shape[3]))
@@ -96,6 +95,7 @@ class Gen3D(BaseDataGenerator):
     y = self.current_file[self._labelset][self.current_index:tmp_index]
     self.current_index += self.batch_size
     if len(x) == 0 or len(y) == 0 or not len(x) == len(y):
+      self.logger.warning("Encountered misshaped array")
       return next(self)
     return (x, y)
 
