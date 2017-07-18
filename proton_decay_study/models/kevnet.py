@@ -84,3 +84,4 @@ class Kevnet(Model):
     layer = Dense(generator.input, activation='softmax',
                   name='predictions')(layer)
     self.logger.info(layer.shape)
+    return layer
