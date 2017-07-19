@@ -81,6 +81,7 @@ def test_threaded_file_input(n_gen, file_list):
 def train_kevnet(steps, epochs, weights, history, output, file_list):
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   from proton_decay_study.models.kevnet import Kevnet
+  from proton_decay_study.callbacks.default import HistoryRecord
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
 
@@ -100,13 +101,14 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                      mode='auto',
                                      period=10
                                      )
+  history_checkpoint = HistoryRecord(history)
   training_output = model.fit_generator(generator, steps_per_epoch=steps,
                                         epochs=epochs,
                                         workers=1,
                                         verbose=1,
                                         max_q_size=1,
                                         pickle_safe=False,
-                                        callbacks=[model_checkpoint])
+                                        callbacks=[model_checkpoint,history_checkpoint])
   model.save(output)
   training_history = {'epochs': training_output.epoch,
                       'acc': training_output.history['acc'],
