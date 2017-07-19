@@ -92,7 +92,6 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
   _model = model
   if weights is not None:
     model.load_weights(weights)
-  logging.info("Starting Training")
   model_checkpoint = ModelCheckpoint(output,
                                      monitor='loss',
                                      verbose=1,
@@ -101,7 +100,8 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                      mode='auto',
                                      period=10
                                      )
-  history_checkpoint = CSVLogger(history)
+  history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+  logging.info("Starting Training")
   training_output = model.fit_generator(generator,
                                         use_multiprocessing=False,
                                         max_queue_size=1,
