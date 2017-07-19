@@ -26,6 +26,7 @@ docs:
 	$(MAKE) -C docs html
 
 install: clean
+	pip install -r requirements.txt
 	python setup.py install
 
 uninstall:

@@ -36,6 +36,7 @@ setup(
             'test_file_input=proton_decay_study.cli:test_file_input',
             'test_threaded_files=proton_decay_study.cli:test_threaded_file_input',
             'train_kevnet=proton_decay_study.cli:train_kevnet',
+            'train_widenet=proton_decay_study.cli:train_widenet',
             'make_kevnet_featuremap=proton_decay_study.cli:make_kevnet_featuremap'
         ]
     },
