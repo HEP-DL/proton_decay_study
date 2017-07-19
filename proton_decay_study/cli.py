@@ -102,13 +102,15 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                      period=10
                                      )
   history_checkpoint = CSVLogger(history)
-  training_output = model.fit_generator(generator, steps_per_epoch=steps,
-                                        epochs=epochs,
+  training_output = model.fit_generator(generator,
+                                        use_multiprocessing=False,
+                                        max_queue_size=1,
+                                        verbose=1, 
                                         workers=1,
-                                        verbose=1,
-                                        max_q_size=1,
-                                        pickle_safe=False,
-                                        callbacks=[model_checkpoint,history_checkpoint])
+                                        callbacks=[model_checkpoint,history_checkpoint],
+                                        epochs=1000, 
+                                        steps_per_epoch=100,
+                                        pickle_safe=False)
   model.save(output)
   training_history = {'epochs': training_output.epoch,
                       'acc': training_output.history['acc'],
