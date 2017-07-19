@@ -2,9 +2,7 @@
 
 import click
 import logging
-import tensorflow as tf
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-
 from keras.callbacks import ModelCheckpoint
 
 
@@ -81,16 +79,13 @@ def test_threaded_file_input(n_gen, file_list):
 @click.option('--output', default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 def train_kevnet(steps, epochs, weights, history, output, file_list):
-  from proton_decay_study.generators.gen3d import Gen3DRandom
+  from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   from proton_decay_study.models.kevnet import Kevnet
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
 
-  init = tf.global_variables_initializer()
-  with tf.Session() as sess:
-    sess.run(init)
 
-  generator = Gen3DRandom(file_list, 'image/wires', 'label/type', batch_size=1)
+  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1)
   model = Kevnet(generator)
   global _model
   _model = model
@@ -109,7 +104,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                         epochs=epochs,
                                         workers=1,
                                         verbose=1,
-                                        max_q_size=4,
+                                        max_q_size=1,
                                         pickle_safe=False,
                                         callbacks=[model_checkpoint])
   model.save(output)
@@ -125,7 +120,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
 @click.option('--input', type=click.Path(exists=True))
 @click.option('--weights', type=click.Path(exists=True))
 def make_kevnet_featuremap(input, weights):
-  from proton_decay_study.generators.gen3d import Gen3DRandom
+  from proton_decay_study.generators.threaded_gen3d import Gen3DRandom
   from proton_decay_study.models.kevnet import Kevnet
   from proton_decay_study.visualization.kevnet import KevNetVisualizer
   logging.basicConfig(level=logging.DEBUG)

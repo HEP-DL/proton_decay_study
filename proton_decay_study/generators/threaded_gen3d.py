@@ -1,16 +1,19 @@
+# -*- coding: utf-8 -*-
 from .base import BaseDataGenerator
-from .single_file import SingleFileDataGenerator
+from .single_file_3d import Gen3D
 import logging
 import threading
-import Queue
+import queue
 import traceback
 import signal
 import sys
+import random
 
 
 class SingleFileThread(threading.Thread):
   """
-    Represents a single file that is asynchronously
+    Wrapper thread for buffering data from a 
+    single file
   """
 
   # Locks class for the duration of parent lifetime
@@ -20,8 +23,8 @@ class SingleFileThread(threading.Thread):
   # Set this to 0 to kill all threads once prefetch is finished.
   __ThreadExitFlag__ = 1
 
-  # Holds the current thread queue
-  queue = Queue.Queue(10000)
+  # Holds the current request queue
+  queue = queue.Queue(10000)
 
   # Locks the thread queue
   queueLock = threading.Lock()
@@ -44,63 +47,73 @@ class SingleFileThread(threading.Thread):
     self.labelsetname = labelsetname
     self.batch_size = batch_size
 
-    # prefetched means that there's data ready
     self._buffer = None
     self.single_thread_lock = threading.Lock()
 
-    # This holds the
+    # This holds the file generator pattern
     self._filegen = None
-
-  @property
-  def get(self):
-    self.single_thread_lock.acquire()
-    if self._buffer is None:
-      pass
 
   def run(self):
     """
       Loops over queue to accept new configurations
     """
+    self.logger.info("Starting thread: {}".format(self))
     while SingleFileThread.__ThreadExitFlag__:
-      if self.single_thread_lock.locked():
-        continue
-      else:
-        self.single_thread_lock.acquire()
-        if self._buffer is not None:
-          self.single_thread_lock.release()
-          continue
-        self.single_thread_lock.release()
+      # The thread loop should exit once it sees
+      # the stop thread flag
 
-      if self._filegen is None or self._filegen.reused:
+      if self.single_thread_lock.locked() or self._buffer is not None:
+        # If this is currently being visited by parent
+        # Just continue
+        continue
+      # At this point, we need to fill the buffer
+
+      # If we don't have  filegen, get one
+      if self._filegen is None:
         self.queueLock.acquire()
         if not self.queue.empty():
-
-          self._filegen = SingleFileDataGenerator(SingleFileThread.queue.get(),
-                                                  self.datasetname,
-                                                  self.labelsetname,
-                                                  self.batch_size)
-          self.logger.info("Moving to file: {}".format(self._filegen))
-        self.queueLock.release()
-      else:
-        try:
+          name = SingleFileThread.queue.get()
           try:
-            self.single_thread_lock.acquire()
-            self._buffer = self._filegen.next()
-          except StopIteration:
-            self.logger.warning("Hit Stop Iteration")
-            self._buffer = None
+            self._filegen = Gen3D(name,
+                                  self.datasetname,
+                                  self.labelsetname,
+                                  self.batch_size)
+            self.logger.info("Moving to file: {}".format(self._filegen._filename))
+          except Exception as e:
+            self.logger.warning(e)
             self._filegen = None
-          self.single_thread_lock.release()
-        except Exception:
-          exc_type, exc_value, exc_traceback = sys.exc_info()
-          self.logger.error(repr(traceback.format_exception(exc_type,
-                                                            exc_value,
-                            exc_traceback)))
+            self.queueLock.release()
+            return None
+        else:
+          self.queueLock.release()
+          continue
+        self.queueLock.release()
+      # Now, fill the buffer and release
+      self.single_thread_lock.acquire()
+      try:
+        self._buffer = self._filegen.next()
+      except StopIteration:
+        self._buffer = None
+        self._filegen = None
+      self.single_thread_lock.release()
+
+  def visit(self, parent):
+    # wait until we have it
+    if self.single_thread_lock.locked():
+      return None
+    # Now grab it
+    self.single_thread_lock.acquire()
+    # Copy the data handle out (not the data itself)
+    ret = self._buffer
+    self._buffer = None
+    self.single_thread_lock.release()
+    parent.check_and_refill()
+    return ret
 
   @staticmethod
   def killRunThreads(signum, frame):
       """
-          Sets the thread kill flag to each of the ongoing analysis threads
+        Sets the thread kill flag to each of the ongoing analysis threads
       """
       SingleFileThread.logger.info("Killing Single File threads...")
       SingleFileThread.__ThreadExitFlag__ = 0
@@ -137,36 +150,45 @@ class SingleFileThread(threading.Thread):
       # dealloc
       SingleFileThread.activeThreads = []
 
+  @staticmethod
+  def status():
+    SingleFileThread.logger.debug("ThreadLock: {}".format(SingleFileThread.threadLock.locked()))
+    SingleFileThread.logger.debug("QueueLock: {}".format(SingleFileThread.queueLock.locked()))
+    SingleFileThread.logger.debug("Flag: {}".format(SingleFileThread.__ThreadExitFlag__))
+
+  def single_status(self):
+    self.logger.debug("Single Thread Lock: {}".format(self.single_thread_lock.locked()))
+
 
 signal.signal(signal.SIGINT, SingleFileThread.killRunThreads)
 
 
 class ThreadedMultiFileDataGenerator(BaseDataGenerator):
   """
-      Uses threads to pull asynchronously from files
+    Uses threads to pull asynchronously from files
   """
   logger = logging.getLogger("pdk.gen.threaded_multi")
 
   def __init__(self, datapaths, datasetname,
-               labelsetname, batch_size=1, nThreads=2):
-
+               labelsetname, batch_size=1, nThreads=8):
     SingleFileThread.threadLock.acquire()
-    self._threads = SingleFileThread.startThreads(nThreads, datasetname,
-                                                  labelsetname, batch_size)
-    SingleFileThread.queueLock.acquire()
-    for config in datapaths:
-        SingleFileThread.queue.put(config)
-    SingleFileThread.queueLock.release()
+    self.datapaths = [i for i in datapaths]
+    for i in range(len(datapaths)):
+      random.shuffle(self.datapaths)
 
-    self.datapaths = datapaths
-    self.logger.info("Threaded multi file generator ready for generation")
+    self.check_and_refill()
+
+    SingleFileThread.startThreads(nThreads, datasetname,
+                                  labelsetname, batch_size)
+
     self.current_thread_index = 0
-
+    self.logger.info("Threaded multi file generator ready for generation")
+    
   def __del__(self):
     SingleFileThread.__ThreadExitFlag__ = 0
     for t in SingleFileThread.activeThreads:
       t.join()
-    del self._threads
+    SingleFileThread.activeThreads = []
     SingleFileThread.threadLock.release()
 
   @property
@@ -186,39 +208,35 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     """
     return 0
 
-  def next(self):
-    # see if there's any pre-fetched data
+  def status(self):
+    self.logger.debug("Filenames: {}".format(self.datapaths))
+    self.logger.debug("Active threads: {}".format(SingleFileThread.activeThreads))
+    SingleFileThread.status()
+    for i in SingleFileThread.activeThreads:
+      i.single_status()
 
-    # If the filename queue is empty, fill it back up again.
-    # This ensures that files are all used up before they
-    # are iterated over again.
-    self.logger.debug("Getting next")
+  def check_and_refill(self):
     SingleFileThread.queueLock.acquire()
     if SingleFileThread.queue.empty():
       for i in self.datapaths:
         SingleFileThread.queue.put(i)
     SingleFileThread.queueLock.release()
 
-    tmp_buffer = None
-    while tmp_buffer is None:
-      if self.current_thread_index >= len(SingleFileThread.activeThreads):
+  def next(self):
+    # see if there's any pre-fetched data
+
+    # If the filename queue is empty, fill it back up again.
+    # This ensures that files are all used up before they
+    # are iterated over again.
+    if self.current_thread_index >= len(SingleFileThread.activeThreads):
+      self.current_thread_index = 0
+    thread = SingleFileThread.activeThreads[self.current_thread_index]
+    self.current_thread_index+=1
+    ret = thread.visit(self)
+    while ret is None:
+      if self.current_thread_index == len(SingleFileThread.activeThreads):
         self.current_thread_index = 0
       thread = SingleFileThread.activeThreads[self.current_thread_index]
-      thread.single_thread_lock.acquire()
-      if thread._buffer is not None:
-        new_buff = thread._buffer
-        thread._buffer = None
-        thread.single_thread_lock.release()
-        if new_buff is None:
-          self.logger.warning("Found null dataset")
-          return self.next()
-        x, y = new_buff
-        if not len(x) == len(y):
-          self.logger.warning("Found incorrect dataset size")
-          return self.next()
-        return new_buff
-      else:
-        self.current_thread_index += 1
-      thread.single_thread_lock.release()
-    self.logger.warning("Threaded buffer found queue is empty. Trying again")
-    return self.next()
+      self.current_thread_index+=1
+      ret = thread.visit(self)
+    return ret
