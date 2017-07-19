@@ -41,12 +41,12 @@ class Kevnet(Model):
                          name='block1_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(512, (3, 15, 9), strides=(1, 14, 8),
+    layer = Conv3D(512, (3, 15, 9), strides=(3, 14, 8),
                    activation='relu', padding='same',
                    data_format='channels_first',
                    name='block3_conv1')(layer)
     self.logger.info(layer.shape)
-    layer = MaxPooling3D((3, 15, 9), strides=(1, 14, 8),
+    layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
                          data_format='channels_first',
                          name='block3_pool')(layer)
     self.logger.info(layer.shape)
@@ -60,7 +60,6 @@ class Kevnet(Model):
                          data_format='channels_first',
                          name='block4_pool')(layer)
     self.logger.info(layer.shape)
-
 
     # Classification block
     layer = Flatten(name='flatten')(layer)
