@@ -27,7 +27,7 @@ class Kevnet(Model):
   def assemble(self, generator):
 
     self.logger.info("Assembling Model")
-    self._input = Input(shape=generator.output)
+    self._input = Input(shape=generator.output, dtype='int32')
     self.logger.info(self._input)
 
     layer = Conv3D(64, (1, 15, 9), strides=(1, 14, 8),
@@ -56,8 +56,6 @@ class Kevnet(Model):
 
     # Classification block
     layer = Flatten(name='flatten')(layer)
-    layer = Dropout(0.01)(layer)
-    layer = Dense(256, activation='relu', name='fc1')(layer)
     layer = Dropout(0.01)(layer)
     layer = Dense(generator.input,
                   activation='softmax',
