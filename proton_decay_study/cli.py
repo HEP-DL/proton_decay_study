@@ -103,13 +103,13 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
   history_checkpoint = CSVLogger(history.replace('.json','.csv'))
   logging.info("Starting Training")
   training_output = model.fit_generator(generator,
-                                        use_multiprocessing=False,
+                                        use_multiprocessing=True,
                                         max_queue_size=1,
-                                        verbose=1, 
+                                        verbose=1,
                                         workers=1,
                                         callbacks=[model_checkpoint,history_checkpoint],
-                                        epochs=1000, 
-                                        steps_per_epoch=100,
+                                        epochs=epochs, 
+                                        steps_per_epoch=steps,
                                         pickle_safe=False)
   model.save(output)
   training_history = {'epochs': training_output.epoch,
