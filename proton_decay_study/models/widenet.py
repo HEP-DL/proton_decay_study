@@ -29,42 +29,35 @@ class Kevnet(Model):
     self.logger.info("Assembling Model")
     self._input = Input(shape=generator.output)
     self.logger.info(self._input)
-    self.logger.info(self._input.shape)
 
-    layer = Conv3D(128, (1, 15, 9), strides=(1, 14, 8),
+    layer = Conv3D(64, (1, 15, 9), strides=(1, 14, 8),
                    activation='relu', padding='same',
-                   data_format='channels_first',
-                   name='block1_conv1')(self._input)
-    self.logger.info(layer.shape)
+                   data_format='channels_first')(self._input)
+    self.logger.info(layer)
     layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
-                         data_format='channels_first',
-                         name='block1_pool')(layer)
-    self.logger.info(layer.shape)
+                         data_format='channels_first')(layer)
+    self.logger.info(layer)
 
-    layer = Conv3D(512, (3, 15, 9), strides=(3, 14, 8),
+    layer = Conv3D(128, (3, 15, 9), strides=(3, 14, 8),
                    activation='relu', padding='same',
-                   data_format='channels_first',
-                   name='block3_conv1')(layer)
-    self.logger.info(layer.shape)
+                   data_format='channels_first')(layer)
+    self.logger.info(layer)
     layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
-                         data_format='channels_first',
-                         name='block3_pool')(layer)
-    self.logger.info(layer.shape)
+                         data_format='channels_first')(layer)
+    self.logger.info(layer)
 
-    layer = Conv3D(1024, (1, 4, 7), strides=(1, 4, 7),
+    layer = Conv3D(256, (1, 4, 7), strides=(1, 4, 7),
                    activation='relu', padding='same',
-                   data_format='channels_first',
-                   name='block4_conv1')(layer)
-    self.logger.info(layer.shape)
+                   data_format='channels_first')(layer)
+    self.logger.info(layer)
     layer = MaxPooling3D((1, 4, 7), strides=(1, 4, 7),
-                         data_format='channels_first',
-                         name='block4_pool')(layer)
-    self.logger.info(layer.shape)
+                         data_format='channels_first')(layer)
+    self.logger.info(layer)
 
     # Classification block
     layer = Flatten(name='flatten')(layer)
     layer = Dropout(0.01)(layer)
-    layer = Dense(1024, activation='relu', name='fc1')(layer)
+    layer = Dense(256, activation='relu', name='fc1')(layer)
     layer = Dropout(0.01)(layer)
     layer = Dense(generator.input,
                   activation='softmax',
