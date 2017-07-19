@@ -3,7 +3,7 @@
 import click
 import logging
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, CSVLogger
 
 
 @click.command()
@@ -101,7 +101,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                      mode='auto',
                                      period=10
                                      )
-  history_checkpoint = HistoryRecord(history)
+  history_checkpoint = CSVLogger(history)
   training_output = model.fit_generator(generator, steps_per_epoch=steps,
                                         epochs=epochs,
                                         workers=1,
