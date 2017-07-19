@@ -45,7 +45,7 @@ class Kevnet(Model):
                          name='block2_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(128, (3, 3, 3), strides=(3, 2, 2),
+    layer = Conv3D(128, (1, 3, 3), strides=(1, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first',
                    name='block3_conv1')(layer)
@@ -55,7 +55,7 @@ class Kevnet(Model):
                          name='block3_pool')(layer)
     self.logger.info(layer.shape)
 
-    layer = Conv3D(256, (1, 3, 3), strides=(1, 2, 2),
+    layer = Conv3D(256, (3, 3, 3), strides=(3, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first',
                    name='block4_conv1')(layer)
