@@ -6,7 +6,7 @@ class Stage2(Stage1):
   logger = logging.getLogger('pdk.stage1')
 
   def assemble_layers(self, layer):
-    layer = Super(Stage1, self).assemble_layers(layer)
+    layer = super(Stage1, self).assemble_layers(layer)
     layer = Conv3D(64, (1, 3, 3), strides=(1, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
