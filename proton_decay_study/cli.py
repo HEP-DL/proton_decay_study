@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import sys
 import click
 import logging
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
@@ -236,3 +236,4 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   import json
   open(history, 'w').write(json.dumps(training_history))
   logger.info("Done.")
+  sys.exit(0)
