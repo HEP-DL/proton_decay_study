@@ -29,7 +29,7 @@ class Kevnet(Model):
     self._input = Input(shape=generator.output, dtype='float32')
     self.logger.info(self._input)
 
-    layer = Conv3D(1024, (1, 15, 9), strides=(1, 14, 8),
+    layer = Conv3D(256, (1, 15, 9), strides=(1, 14, 8),
                        activation='relu', padding='same',
                        data_format='channels_first',
                        name='conv1')(self._input)
