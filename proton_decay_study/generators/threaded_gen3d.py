@@ -163,7 +163,7 @@ class SingleFileThread(threading.Thread):
     self.logger.debug("Single Thread Lock: {}".format(self.single_thread_lock.locked()))
 
 
-signal.signal(signal.SIGINT, SingleFileThread.killRunThreads)
+# signal.signal(signal.SIGINT, SingleFileThread.killRunThreads)
 
 
 class ThreadedMultiFileDataGenerator(BaseDataGenerator):
