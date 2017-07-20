@@ -33,21 +33,25 @@ class Kevnet(Model):
                        activation='relu', padding='same',
                        data_format='channels_first',
                        name='conv1')(self._input)
+    self.logger.info(layer)
     layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
                          data_format='channels_first',
                         name='pool1')(layer)
+    self.logger.info(layer)
     layer = Conv3D(2048, (3, 15, 9), strides=(3, 14, 8),
                        activation='relu', padding='same',
                        data_format='channels_first',
                       name='conv2')(layer)
+    self.logger.info(layer)
     layer = MaxPooling3D((1, 4, 7), strides=(1, 4, 7),
                              data_format='channels_first',
                             name='pool2')(layer)
+    self.logger.info(layer)
     # Classification block
     layer = Flatten(name='flatten')(layer)
     layer = Dropout(0.01)(layer)
     layer = Dense(generator.input,
                   activation='softmax',
                   name='predictions')(layer)
-    self.logger.info(layer.shape)
+    self.logger.info(layer)
     return layer

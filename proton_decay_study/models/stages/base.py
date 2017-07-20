@@ -22,18 +22,36 @@ class Kevnet(Model):
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
                  metrics=['accuracy'])
 
+  def pre_assemble(self, generator):
+    self._input = Input(shape=generator.output,
+                        dtype='float32')
+
+  def post_assemble(self, layer):
+    layer = Dense(generator.input,
+                  activation='softmax')(layer)
+    self.logger.info(layer)
+    return layer
+
+
   def assemble(self, generator):
 
     self.logger.info("Assembling Model")
-    self._input = Input(shape=generator.output,
-                        dtype='float32')
+
     self.logger.info(self._input)
 
-    layer = Conv3D(64, (1, 5, 3), strides=(1, 4, 2),
+    layer = Conv3D(32, (1, 5, 3), strides=(1, 4, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(self._input)
     self.logger.info(layer)
     layer = MaxPooling3D((1, 5, 3), strides=(1, 4, 2),
+                         data_format='channels_first')(layer)
+    self.logger.info(layer)
+
+    layer = Conv3D(64, (1, 3, 3), strides=(1, 2, 2),
+                   activation='relu', padding='same',
+                   data_format='channels_first')(layer)
+    self.logger.info(layer)
+    layer = MaxPooling3D((1, 3, 3), strides=(1, 2, 2),
                          data_format='channels_first')(layer)
     self.logger.info(layer)
 
@@ -45,7 +63,7 @@ class Kevnet(Model):
                          data_format='channels_first')(layer)
     self.logger.info(layer)
 
-    layer = Conv3D(256, (1, 3, 3), strides=(1, 2, 2),
+    layer = Conv3D(256, (3, 3, 3), strides=(3, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
     self.logger.info(layer)
@@ -53,15 +71,7 @@ class Kevnet(Model):
                          data_format='channels_first')(layer)
     self.logger.info(layer)
 
-    layer = Conv3D(512, (3, 3, 3), strides=(3, 2, 2),
-                   activation='relu', padding='same',
-                   data_format='channels_first')(layer)
-    self.logger.info(layer)
-    layer = MaxPooling3D((1, 3, 3), strides=(1, 2, 2),
-                         data_format='channels_first')(layer)
-    self.logger.info(layer)
-
-    layer = Conv3D(1024, (1, 3, 3), strides=(1, 3, 3),
+    layer = Conv3D(512, (1, 3, 3), strides=(1, 3, 3),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
     self.logger.info(layer)
@@ -75,7 +85,4 @@ class Kevnet(Model):
     layer = Dropout(0.01)(layer)
     layer = Dense(2048, activation='relu')(layer)
     layer = Dropout(0.01)(layer)
-    layer = Dense(generator.input,
-                  activation='softmax')(layer)
-    self.logger.info(layer)
-    return layer
+
