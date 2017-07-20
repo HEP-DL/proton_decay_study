@@ -14,6 +14,9 @@ class SingleFileThread(threading.Thread):
   """
     Wrapper thread for buffering data from a 
     single file
+
+    TODO: Looks like the destructor isn't killings
+    the daughter threads in good time.
   """
 
   # Locks class for the duration of parent lifetime

@@ -110,8 +110,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                                         callbacks=[model_checkpoint,
                                                    history_checkpoint],
                                         epochs=epochs, 
-                                        steps_per_epoch=steps,
-                                        pickle_safe=False)
+                                        steps_per_epoch=steps)
   model.save(output)
   training_history = {'epochs': training_output.epoch,
                       'acc': training_output.history['acc'],
@@ -179,8 +178,7 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
                                         callbacks=[model_checkpoint,
                                                    history_checkpoint],
                                         epochs=epochs, 
-                                        steps_per_epoch=steps,
-                                        pickle_safe=False)
+                                        steps_per_epoch=steps)
   model.save(output)
   training_history = {'epochs': training_output.epoch,
                       'acc': training_output.history['acc'],
