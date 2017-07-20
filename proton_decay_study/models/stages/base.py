@@ -13,7 +13,7 @@ class BaseNet(Model):
     self.generator = generator
 
     layer = self.assemble()
-    super(Kevnet, self).__init__(self._input, layer)
+    super(BaseNet, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
     self.sgd = optimizers.SGD(lr=0.1,
                               decay=1e-3,

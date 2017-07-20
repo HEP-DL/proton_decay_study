@@ -6,7 +6,7 @@ class Stage1(BaseNet):
   logger = logging.getLogger('pdk.stage1')
 
   def assemble_layers(self, layer):
-    layer = Conv3D(256, (1, 3, 3), strides=(1, 3, 3),
+    layer = Conv3D(64, (1, 3, 3), strides=(1, 3, 3),
                        activation='relu', padding='same',
                        data_format='channels_first')(self._input)
     self.logger.info(layer)
