@@ -19,7 +19,7 @@ class BaseNet(Model):
                               momentum=0.5, 
                               nesterov=True)
     # The other option here is mean square error
-    self.compile(loss='mean_square_error', optimizer=self.sgd,
+    self.compile(loss='mean_squared_error', optimizer=self.sgd,
                  metrics=['accuracy'])
 
   def pre_assemble(self):
