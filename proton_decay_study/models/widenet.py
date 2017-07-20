@@ -1,8 +1,7 @@
-from keras.layers import Input, Dropout, Dense, Flatten
 from keras.layers.convolutional import MaxPooling3D, Conv3D
+from keras.layers import Input, Dropout, Dense, Flatten
 from keras.models import Model
 from keras import optimizers
-
 import logging
 
 
@@ -27,39 +26,23 @@ class Kevnet(Model):
   def assemble(self, generator):
 
     self.logger.info("Assembling Model")
-    self._input = Input(shape=generator.output, dtype='int32')
+    self._input = Input(shape=generator.output, dtype='float32')
     self.logger.info(self._input)
 
-    layer = Conv3D(64, (1, 15, 9), strides=(1, 14, 8),
-                   activation='relu', padding='same',
-                   data_format='channels_first',
-                   name='conv1')(self._input)
-    self.logger.info(layer)
+    layer = Conv3D(1024, (1, 15, 9), strides=(1, 14, 8),
+                       activation='relu', padding='same',
+                       data_format='channels_first',
+                       name='conv1')(self._input)
     layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
                          data_format='channels_first',
                         name='pool1')(layer)
-    self.logger.info(layer)
-
-    layer = Conv3D(128, (3, 15, 9), strides=(3, 14, 8),
-                   activation='relu', padding='same',
-                   data_format='channels_first',
-                  name='conv2')(layer)
-    self.logger.info(layer)
-    layer = MaxPooling3D((1, 15, 9), strides=(1, 14, 8),
-                         data_format='channels_first',
-                        name='pool2')(layer)
-    self.logger.info(layer)
-
-    layer = Conv3D(256, (1, 4, 7), strides=(1, 4, 7),
-                   activation='relu', padding='same',
-                   data_format='channels_first',
-                   name='conv3')(layer)
-    self.logger.info(layer)
+    layer = Conv3D(2048, (3, 15, 9), strides=(3, 14, 8),
+                       activation='relu', padding='same',
+                       data_format='channels_first',
+                      name='conv2')(layer)
     layer = MaxPooling3D((1, 4, 7), strides=(1, 4, 7),
-                         data_format='channels_first',
-                         name='pool3')(layer)
-    self.logger.info(layer)
-
+                             data_format='channels_first',
+                            name='pool2')(layer)
     # Classification block
     layer = Flatten(name='flatten')(layer)
     layer = Dropout(0.01)(layer)
