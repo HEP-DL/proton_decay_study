@@ -26,7 +26,7 @@ class Kevnet(Model):
   def assemble(self, generator):
 
     self.logger.info("Assembling Model")
-    self._input = Input(shape=generator.output)
+    self._input = Input(shape=generator.output, dtype='int32', name='main_input')
     self.logger.info(self._input)
     self.logger.info(self._input.shape)
 
