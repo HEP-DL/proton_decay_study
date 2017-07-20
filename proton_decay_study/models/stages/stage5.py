@@ -1,13 +1,13 @@
-from .stage1 import Stage1
+from .stage4 import Stage4
 from keras.layers.convolutional import MaxPooling3D, Conv3D
 import logging
 
-class Stage2(Stage1):
-  logger = logging.getLogger('pdk.stage2')
+class Stage5(Stage4):
+  logger = logging.getLogger('pdk.stage5')
 
   def assemble_layers(self, layer):
-    layer = super(Stage2, self).assemble_layers(layer)
-    layer = Conv3D(64, (1, 3, 3), strides=(1, 2, 2),
+    layer = super(Stage5, self).assemble_layers(layer)
+    layer = Conv3D(256, (1, 3, 3), strides=(1, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
     self.logger.info(layer)
