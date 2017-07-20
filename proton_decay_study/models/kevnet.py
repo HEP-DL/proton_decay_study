@@ -84,7 +84,7 @@ class Kevnet(Model):
     # Classification block
     layer = Flatten(name='flatten')(layer)
     layer = Dropout(0.01)(layer)
-    layer = Dense(, activation='relu', name='fc1')(layer)
+    layer = Dense(2048, activation='relu', name='fc1')(layer)
     layer = Dropout(0.01)(layer)
     layer = Dense(generator.input,
                   activation='softmax',
