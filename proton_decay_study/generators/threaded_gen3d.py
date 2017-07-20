@@ -189,8 +189,8 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     
   def __del__(self):
     SingleFileThread.__ThreadExitFlag__ = 0
-    for t in SingleFileThread.activeThreads:
-      t.join()
+    # for t in SingleFileThread.activeThreads:
+    #   t.join()
     SingleFileThread.activeThreads = []
     SingleFileThread.threadLock.release()
 
