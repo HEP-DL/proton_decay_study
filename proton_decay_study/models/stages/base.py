@@ -29,6 +29,8 @@ class BaseNet(Model):
 
   def post_assemble(self, layer):
     layer = Flatten(name='flatten')(layer)
+    layer = Dense(1024,
+                  activation='relu')(layer)
     layer = Dense(self.generator.input,
                   activation='softmax')(layer)
     self.logger.info(layer)
