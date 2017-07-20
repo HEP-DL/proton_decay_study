@@ -14,23 +14,23 @@ class BaseNet(Model):
 
     layer = self.assemble()
     super(BaseNet, self).__init__(self._input, layer)
-    self.logger.info("Compiling Model")
     self.sgd = optimizers.SGD(lr=0.1,
                               decay=1e-3,
                               momentum=0.5, 
                               nesterov=True)
-    self.compile(loss='mean_squared_error', optimizer=self.sgd,
+    # The other option here is mean square error
+    self.compile(loss='kullback_leibler_divergence', optimizer=self.sgd,
                  metrics=['accuracy'])
 
   def pre_assemble(self):
     self._input = Input(shape=self.generator.output,
                         dtype='float32')
+    self.logger.info(self._input)
     return self._input
 
   def post_assemble(self, layer):
     layer = Flatten(name='flatten')(layer)
-    layer = Dense(1024,
-                  activation='relu')(layer)
+    self.logger.info(layer)
     layer = Dense(self.generator.input,
                   activation='softmax')(layer)
     self.logger.info(layer)
