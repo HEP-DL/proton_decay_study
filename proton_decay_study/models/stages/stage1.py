@@ -10,7 +10,7 @@ class Stage1(BaseNet):
                        activation='relu', padding='same',
                        data_format='channels_first')(self._input)
     self.logger.info(layer)
-    layer = MaxPooling3D((1, 4, 4), strides=(1, 4, 4),
+    layer = MaxPooling3D((1, 2, 2), strides=(1, 2, 2),
                          data_format='channels_first')(layer)
     self.logger.info(layer)
     return layer

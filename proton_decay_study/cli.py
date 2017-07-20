@@ -219,7 +219,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                      period=10
                                      )
   history_checkpoint = CSVLogger(history.replace('.json','.csv'))
-  logging.info("Starting Training")
+  logging.info("Starting Training [Moving to GPU]")
   training_output = model.fit_generator(generator,
                                         use_multiprocessing=False,
                                         max_queue_size=1,
