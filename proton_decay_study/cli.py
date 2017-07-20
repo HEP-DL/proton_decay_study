@@ -194,7 +194,7 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
 @click.option('--weights', default=None, type=click.Path(exists=True))
 @click.option('--history', default='history.json')
 @click.option('--output', default='stage1.h5')
-@click.option('--stage', deafult=0, type=click.INT)
+@click.option('--stage', default=0, type=click.INT)
 @click.argument('file_list', nargs=-1)
 def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
