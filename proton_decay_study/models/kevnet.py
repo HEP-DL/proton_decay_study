@@ -29,7 +29,7 @@ class Kevnet(Model):
                         dtype='float32')
     self.logger.info(self._input)
 
-    layer = Conv3D(64, (1, 5, 3), strides=(1, 4, 2),
+    layer = Conv3D(32, (1, 5, 3), strides=(1, 4, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(self._input)
     self.logger.info(layer)
@@ -37,7 +37,7 @@ class Kevnet(Model):
                          data_format='channels_first')(layer)
     self.logger.info(layer)
 
-    layer = Conv3D(128, (1, 3, 3), strides=(1, 2, 2),
+    layer = Conv3D(64, (1, 3, 3), strides=(1, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
     self.logger.info(layer)
@@ -45,7 +45,7 @@ class Kevnet(Model):
                          data_format='channels_first')(layer)
     self.logger.info(layer)
 
-    layer = Conv3D(256, (1, 3, 3), strides=(1, 2, 2),
+    layer = Conv3D(128, (1, 3, 3), strides=(1, 2, 2),
                    activation='relu', padding='same',
                    data_format='channels_first')(layer)
     self.logger.info(layer)

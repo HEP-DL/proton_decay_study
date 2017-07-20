@@ -186,3 +186,53 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
   import json
   open(history, 'w').write(json.dumps(training_history))
   logger.info("Done.")
+
+
+@click.command()
+@click.option('--steps', default=1000, type=click.INT)
+@click.option('--epochs', default=1000, type=click.INT)
+@click.option('--weights', default=None, type=click.Path(exists=True))
+@click.option('--history', default='history.json')
+@click.option('--output', default='stage1.h5')
+@click.option('--stage', deafult=0, type=click.INT)
+@click.argument('file_list', nargs=-1)
+def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
+  from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
+  from proton_decay_study.models.stages import stages
+  from proton_decay_study.callbacks.default import HistoryRecord
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+
+
+  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1)
+  model = stages[stage](generator)
+  global _model
+  _model = model
+  if weights is not None:
+    model.load_weights(weights)
+  model_checkpoint = ModelCheckpoint(output,
+                                     monitor='loss',
+                                     verbose=1,
+                                     save_best_only=True,
+                                     save_weights_only=True,
+                                     mode='auto',
+                                     period=10
+                                     )
+  history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+  logging.info("Starting Training")
+  training_output = model.fit_generator(generator,
+                                        use_multiprocessing=False,
+                                        max_queue_size=1,
+                                        verbose=1,
+                                        workers=1,
+                                        callbacks=[model_checkpoint,
+                                                   history_checkpoint],
+                                        epochs=epochs, 
+                                        steps_per_epoch=steps)
+  model.save(output)
+  training_history = {'epochs': training_output.epoch,
+                      'acc': training_output.history['acc'],
+                      'loss': training_output.history['loss']}
+  import json
+  open(history, 'w').write(json.dumps(training_history))
+  logger.info("Done.")
