@@ -240,5 +240,9 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
     history_output.write(json.dumps(training_history))
   del generator
   generator = None
+  del model
+  del model_checkpoint
+  del history_checkpoint
+  del training_output
 
   logger.info("Done.")
