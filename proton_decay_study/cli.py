@@ -166,7 +166,7 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
                                      save_best_only=True,
                                      save_weights_only=True,
                                      mode='auto',
-                                     period=10
+                                     period=1
                                      )
   history_checkpoint = CSVLogger(history.replace('.json','.csv'))
   logging.info("Starting Training")
@@ -216,7 +216,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                      save_best_only=True,
                                      save_weights_only=True,
                                      mode='auto',
-                                     period=10
+                                     period=1
                                      )
   history_checkpoint = CSVLogger(history.replace('.json','.csv'))
   logging.info("Starting Training [Moving to GPU]")

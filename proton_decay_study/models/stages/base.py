@@ -6,6 +6,14 @@ import logging
 
 
 class BaseNet(Model):
+  """
+  I said to the man on the door of my calm let me in
+  It's time to begin
+  He said, I must go to a town in the midst of it all
+  Acoustics enthrall
+  And now I have come to a place where my frequency's sold
+  In Soundwaves of Gold
+  """
   logger = logging.getLogger('pdk.basenet')
 
   def __init__(self, generator):
@@ -16,7 +24,7 @@ class BaseNet(Model):
     super(BaseNet, self).__init__(self._input, layer)
     self.sgd = optimizers.SGD(lr=0.1,
                               decay=1e-3,
-                              momentum=0.5, 
+                              momentum=0.2, 
                               nesterov=True)
     # The other option here is mean square error
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
