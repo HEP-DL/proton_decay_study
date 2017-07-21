@@ -187,6 +187,14 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     self.current_thread_index = 0
     self.logger.info("Threaded multi file generator ready for generation")
     
+  def kill_child_processes(self):
+    self.status()
+    SingleFileThread.__ThreadExitFlag__ = 0
+    for t in SingleFileThread.activeThreads:
+       t.join(10.0)
+    SingleFileThread.activeThreads = []
+    SingleFileThread.threadLock.release()
+
   def __del__(self):
     self.status()
     SingleFileThread.__ThreadExitFlag__ = 0

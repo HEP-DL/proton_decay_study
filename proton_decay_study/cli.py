@@ -238,6 +238,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   import json
   with open(history, 'w') as history_output:
     history_output.write(json.dumps(training_history))
+  generator.kill_child_processes()
   del generator
   generator = None
   del model
