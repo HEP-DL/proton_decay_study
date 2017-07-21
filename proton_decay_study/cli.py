@@ -117,7 +117,7 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
                       'loss': training_output.history['loss']}
   import json
   open(history, 'w').write(json.dumps(training_history))
-  del generator
+  generator.kill_child_processes()
   logger.info("Done.")
 
 
@@ -186,7 +186,8 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
                       'loss': training_output.history['loss']}
   import json
   open(history, 'w').write(json.dumps(training_history))
-  del generator
+  generator.kill_child_processes()
+  
   logger.info("Done.")
 
 
@@ -239,11 +240,5 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   with open(history, 'w') as history_output:
     history_output.write(json.dumps(training_history))
   generator.kill_child_processes()
-  del generator
-  generator = None
-  del model
-  del model_checkpoint
-  del history_checkpoint
-  del training_output
 
   logger.info("Done.")
