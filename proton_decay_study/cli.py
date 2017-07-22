@@ -223,7 +223,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                      )
   history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
   es_callback =  EarlyStopping(monitor='loss', min_delta=0, patience=5, verbose=1, mode='auto')
-  tb_callback = TensorBoard(write_grads=True, write_images=True, histogram_freq=1)
+  tb_callback = TensorBoard()
   logging.info("Starting Training [Moving to GPU]")
   training_output = model.fit_generator(generator,
                                         use_multiprocessing=False,
