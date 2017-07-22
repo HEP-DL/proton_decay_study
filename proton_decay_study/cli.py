@@ -3,7 +3,7 @@ import sys
 import click
 import logging
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-from keras.callbacks import ModelCheckpoint, CSVLogger
+from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard
 
 
 @click.command()
@@ -222,6 +222,8 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                      period=1
                                      )
   history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+  es_callback =  EarlyStopping(monitor='loss', min_delta=0, patience=5, verbose=1, mode='auto')
+  tb_callback = TensorBoard()
   logging.info("Starting Training [Moving to GPU]")
   training_output = model.fit_generator(generator,
                                         use_multiprocessing=False,
@@ -229,7 +231,9 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                         verbose=1,
                                         workers=1,
                                         callbacks=[model_checkpoint,
-                                                   history_checkpoint],
+                                                   history_checkpoint, 
+                                                   es_callback,
+                                                   tb_callback],
                                         epochs=epochs, 
                                         steps_per_epoch=steps)
   model.save(output)
