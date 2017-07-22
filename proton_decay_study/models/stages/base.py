@@ -26,6 +26,7 @@ class BaseNet(Model):
     # The other option here is mean square error
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
                  metrics=['accuracy'])
+    self.logger.info("Finished Compiling Network")
 
   def pre_assemble(self):
     self._input = Input(shape=self.generator.output,
@@ -37,7 +38,9 @@ class BaseNet(Model):
     layer = Flatten(name='flatten')(layer)
     self.logger.info(layer)
     layer = Dense(self.generator.input,
-                  activation='softmax')(layer)
+                  activation='softmax',
+                  kernel_initializer='random_uniform',
+                  bias_initializer='zeros')(layer)
     self.logger.info(layer)
     return layer
 
