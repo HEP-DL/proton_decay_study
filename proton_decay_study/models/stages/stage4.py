@@ -1,5 +1,6 @@
 from .stage3 import Stage3
 from keras.layers.convolutional import MaxPooling3D, Conv3D
+from keras.regularizers import l1, l2
 import logging
 
 class Stage4(Stage3):

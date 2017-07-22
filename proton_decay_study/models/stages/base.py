@@ -2,6 +2,7 @@ from keras.layers.convolutional import MaxPooling3D, Conv3D
 from keras.layers import Input, Dropout, Dense, Flatten
 from keras.models import Model
 from keras import optimizers
+from keras.regularizers import l1, l2
 import logging
 
 
@@ -40,7 +41,9 @@ class BaseNet(Model):
     layer = Dense(self.generator.input,
                   activation='softmax',
                   kernel_initializer='random_uniform',
-                  bias_initializer='zeros')(layer)
+                  bias_initializer='zeros',
+                  kernel_regularizer=l2(0.01),
+                  activity_regularizer=l1(0.01))(layer)
     self.logger.info(layer)
     return layer
 

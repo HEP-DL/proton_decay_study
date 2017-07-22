@@ -1,6 +1,6 @@
 from .base import BaseNet
 from keras.layers.convolutional import MaxPooling3D, Conv3D
-from keras.regulizers import l1, l2
+from keras.regularizers import l1, l2
 import logging
 
 class Stage1(BaseNet):
