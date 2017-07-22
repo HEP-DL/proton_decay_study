@@ -174,18 +174,31 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   def __init__(self, datapaths, datasetname,
                labelsetname, batch_size=1, nThreads=8):
-    SingleFileThread.threadLock.acquire()
     self.datapaths = [i for i in datapaths]
+    self.nThreads = nThreads
+    self.datasetname = datasetname
+    self.labelsetname = labelsetname
+    self.batch_size = batch_size
+
+  def __enter__(self):
+
+    SingleFileThread.threadLock.acquire()
     for i in range(len(datapaths)):
       random.shuffle(self.datapaths)
 
     self.check_and_refill()
 
-    SingleFileThread.startThreads(nThreads, datasetname,
-                                  labelsetname, batch_size)
+    SingleFileThread.startThreads(self.nThreads, self.datasetname,
+                                  self.labelsetname, self.batch_size)
 
     self.current_thread_index = 0
     self.logger.info("Threaded multi file generator ready for generation")
+
+    return self
+
+  def __exit__(self ,type, value, traceback):
+    self.kill_child_processes()
+    return True
     
   def kill_child_processes(self):
     self.status()
@@ -196,12 +209,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     SingleFileThread.threadLock.release()
 
   def __del__(self):
-    self.status()
-    SingleFileThread.__ThreadExitFlag__ = 0
-    for t in SingleFileThread.activeThreads:
-       t.join(10.0)
-    SingleFileThread.activeThreads = []
-    SingleFileThread.threadLock.release()
+    self.kill_child_processes()
 
   @property
   def output(self):

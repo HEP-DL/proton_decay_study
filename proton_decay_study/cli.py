@@ -86,39 +86,38 @@ def train_kevnet(steps, epochs, weights, history, output, file_list):
   logger = logging.getLogger()
 
 
-  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1)
-  model = Kevnet(generator)
-  global _model
-  _model = model
-  if weights is not None:
-    model.load_weights(weights)
-  model_checkpoint = ModelCheckpoint(output,
-                                     monitor='loss',
-                                     verbose=1,
-                                     save_best_only=True,
-                                     save_weights_only=True,
-                                     mode='auto',
-                                     period=10
-                                     )
-  history_checkpoint = CSVLogger(history.replace('.json','.csv'))
-  logging.info("Starting Training")
-  training_output = model.fit_generator(generator,
-                                        use_multiprocessing=False,
-                                        max_queue_size=1,
-                                        verbose=1,
-                                        workers=1,
-                                        callbacks=[model_checkpoint,
-                                                   history_checkpoint],
-                                        epochs=epochs, 
-                                        steps_per_epoch=steps)
-  model.save(output)
-  training_history = {'epochs': training_output.epoch,
-                      'acc': training_output.history['acc'],
-                      'loss': training_output.history['loss']}
-  import json
-  open(history, 'w').write(json.dumps(training_history))
-  generator.kill_child_processes()
-  logger.info("Done.")
+  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+    model = Kevnet(generator)
+    global _model
+    _model = model
+    if weights is not None:
+      model.load_weights(weights)
+    model_checkpoint = ModelCheckpoint(output,
+                                       monitor='loss',
+                                       verbose=1,
+                                       save_best_only=True,
+                                       save_weights_only=True,
+                                       mode='auto',
+                                       period=10
+                                       )
+    history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+    logging.info("Starting Training")
+    training_output = model.fit_generator(generator,
+                                          use_multiprocessing=False,
+                                          max_queue_size=1,
+                                          verbose=1,
+                                          workers=1,
+                                          callbacks=[model_checkpoint,
+                                                     history_checkpoint],
+                                          epochs=epochs, 
+                                          steps_per_epoch=steps)
+    model.save(output)
+    training_history = {'epochs': training_output.epoch,
+                        'acc': training_output.history['acc'],
+                        'loss': training_output.history['loss']}
+    import json
+    open(history, 'w').write(json.dumps(training_history))
+    logger.info("Done.")
 
 
 @click.command()
@@ -155,40 +154,40 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
   logger = logging.getLogger()
 
 
-  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1)
-  model = Kevnet(generator)
-  global _model
-  _model = model
-  if weights is not None:
-    model.load_weights(weights)
-  model_checkpoint = ModelCheckpoint(output,
-                                     monitor='loss',
-                                     verbose=1,
-                                     save_best_only=True,
-                                     save_weights_only=True,
-                                     mode='auto',
-                                     period=1
-                                     )
-  history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
-  logging.info("Starting Training")
-  training_output = model.fit_generator(generator,
-                                        use_multiprocessing=False,
-                                        max_queue_size=1,
-                                        verbose=1,
-                                        workers=1,
-                                        callbacks=[model_checkpoint,
-                                                   history_checkpoint],
-                                        epochs=epochs, 
-                                        steps_per_epoch=steps)
-  model.save(output)
-  training_history = {'epochs': training_output.epoch,
-                      'acc': training_output.history['acc'],
-                      'loss': training_output.history['loss']}
-  import json
-  open(history, 'w').write(json.dumps(training_history))
-  generator.kill_child_processes()
-  
-  logger.info("Done.")
+  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+    model = Kevnet(generator)
+    global _model
+    _model = model
+    if weights is not None:
+      model.load_weights(weights)
+    model_checkpoint = ModelCheckpoint(output,
+                                       monitor='loss',
+                                       verbose=1,
+                                       save_best_only=True,
+                                       save_weights_only=True,
+                                       mode='auto',
+                                       period=1
+                                       )
+    history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
+    logging.info("Starting Training")
+    training_output = model.fit_generator(generator,
+                                          use_multiprocessing=False,
+                                          max_queue_size=1,
+                                          verbose=1,
+                                          workers=1,
+                                          callbacks=[model_checkpoint,
+                                                     history_checkpoint],
+                                          epochs=epochs, 
+                                          steps_per_epoch=steps)
+    model.save(output)
+    training_history = {'epochs': training_output.epoch,
+                        'acc': training_output.history['acc'],
+                        'loss': training_output.history['loss']}
+    import json
+    open(history, 'w').write(json.dumps(training_history))
+    generator.kill_child_processes()
+    
+    logger.info("Done.")
 
 
 @click.command()
@@ -206,43 +205,40 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
 
-
-  generator = ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1)
-  model = stages[stage](generator)
-  global _model
-  _model = model
-  if weights is not None:
-    model.load_weights(weights)
-  model_checkpoint = ModelCheckpoint(output,
-                                     monitor='loss',
-                                     verbose=1,
-                                     save_best_only=True,
-                                     save_weights_only=True,
-                                     mode='auto',
-                                     period=1
-                                     )
-  history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
-  es_callback =  EarlyStopping(monitor='loss', min_delta=0, patience=10, verbose=1, mode='auto')
-  tb_callback = TensorBoard()
-  logging.info("Starting Training [Moving to GPU]")
-  training_output = model.fit_generator(generator,
-                                        use_multiprocessing=False,
-                                        max_queue_size=1,
-                                        verbose=1,
-                                        workers=1,
-                                        callbacks=[model_checkpoint,
-                                                   history_checkpoint, 
-                                                   es_callback,
-                                                   tb_callback],
-                                        epochs=epochs, 
-                                        steps_per_epoch=steps)
-  model.save(output)
-  training_history = {'epochs': training_output.epoch,
-                      'acc': training_output.history['acc'],
-                      'loss': training_output.history['loss']}
-  import json
-  with open(history, 'w') as history_output:
-    history_output.write(json.dumps(training_history))
-  generator.kill_child_processes()
-
-  logger.info("Done.")
+  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+    model = stages[stage](generator)
+    global _model
+    _model = model
+    if weights is not None:
+      model.load_weights(weights)
+    model_checkpoint = ModelCheckpoint(output,
+                                       monitor='loss',
+                                       verbose=1,
+                                       save_best_only=True,
+                                       save_weights_only=True,
+                                       mode='auto',
+                                       period=1
+                                       )
+    history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
+    es_callback =  EarlyStopping(monitor='loss', min_delta=0, patience=10, verbose=1, mode='auto')
+    tb_callback = TensorBoard()
+    logging.info("Starting Training [Moving to GPU]")
+    training_output = model.fit_generator(generator,
+                                          use_multiprocessing=False,
+                                          max_queue_size=1,
+                                          verbose=1,
+                                          workers=1,
+                                          callbacks=[model_checkpoint,
+                                                     history_checkpoint, 
+                                                     es_callback,
+                                                     tb_callback],
+                                          epochs=epochs, 
+                                          steps_per_epoch=steps)
+    model.save(output)
+    training_history = {'epochs': training_output.epoch,
+                        'acc': training_output.history['acc'],
+                        'loss': training_output.history['loss']}
+    import json
+    with open(history, 'w') as history_output:
+      history_output.write(json.dumps(training_history))
+    logger.info("Done.")
