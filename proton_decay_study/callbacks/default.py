@@ -7,7 +7,7 @@ import time
 import csv
 import os
 import six
-from collections import OrderedDict
+from collections import OrderedDict, Iterable
 import numpy as np
 
 
