@@ -198,6 +198,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   def __exit__(self ,type, value, traceback):
     self.kill_child_processes()
+    SingleFileThread.threadLock.release()
     return True
     
   def kill_child_processes(self):
@@ -206,10 +207,6 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     for t in SingleFileThread.activeThreads:
        t.join(10.0)
     SingleFileThread.activeThreads = []
-    SingleFileThread.threadLock.release()
-
-  def __del__(self):
-    self.kill_child_processes()
 
   @property
   def output(self):
