@@ -169,7 +169,7 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
                                      mode='auto',
                                      period=1
                                      )
-  history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+  history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
   logging.info("Starting Training")
   training_output = model.fit_generator(generator,
                                         use_multiprocessing=False,
@@ -221,7 +221,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                      mode='auto',
                                      period=1
                                      )
-  history_checkpoint = CSVLogger(history.replace('.json','.csv'))
+  history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
   es_callback =  EarlyStopping(monitor='loss', min_delta=0, patience=5, verbose=1, mode='auto')
   tb_callback = TensorBoard()
   logging.info("Starting Training [Moving to GPU]")
