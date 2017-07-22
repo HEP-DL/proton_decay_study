@@ -179,21 +179,17 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     self.datasetname = datasetname
     self.labelsetname = labelsetname
     self.batch_size = batch_size
+    self.current_thread_index = 0
 
   def __enter__(self):
-
     SingleFileThread.threadLock.acquire()
     for i in range(len(datapaths)):
       random.shuffle(self.datapaths)
-
     self.check_and_refill()
-
     SingleFileThread.startThreads(self.nThreads, self.datasetname,
                                   self.labelsetname, self.batch_size)
-
     self.current_thread_index = 0
     self.logger.info("Threaded multi file generator ready for generation")
-
     return self
 
   def __exit__(self ,type, value, traceback):
