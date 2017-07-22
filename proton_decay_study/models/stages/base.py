@@ -22,9 +22,9 @@ class BaseNet(Model):
 
     layer = self.assemble()
     super(BaseNet, self).__init__(self._input, layer)
-    self.sgd = optimizers.SGD(lr=0.1,
-                              decay=1e-3,
-                              momentum=0.2, 
+    self.sgd = optimizers.SGD(lr=0.001,
+                              decay=1e-10,
+                              momentum=0.1, 
                               nesterov=True)
     # The other option here is mean square error
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
