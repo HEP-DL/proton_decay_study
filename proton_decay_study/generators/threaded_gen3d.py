@@ -183,7 +183,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   def __enter__(self):
     SingleFileThread.threadLock.acquire()
-    for i in range(len(datapaths)):
+    for i in range(len(self.datapaths)):
       random.shuffle(self.datapaths)
     self.check_and_refill()
     SingleFileThread.startThreads(self.nThreads, self.datasetname,
