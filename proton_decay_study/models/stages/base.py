@@ -1,12 +1,12 @@
 from keras.layers.convolutional import MaxPooling3D, Conv3D
 from keras.layers import Input, Dropout, Dense, Flatten
-from keras.models import Model
+from keras.models import Sequential
 from keras import optimizers
 from keras.regularizers import l1, l2
 import logging
 
 
-class BaseNet(Model):
+class BaseNet(Sequential):
   """
   I said to the man on the door of my calm let me in
   It's time to begin
@@ -18,11 +18,10 @@ class BaseNet(Model):
   logger = logging.getLogger('pdk.basenet')
 
   def __init__(self, generator):
-
+    super(BaseNet, self).__init__()
     self.generator = generator
-
     layer = self.assemble()
-    super(BaseNet, self).__init__(self._input, layer)
+    self.add(layer)
     self.sgd = optimizers.RMSProp(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
     self.logger.info("Compiling...")
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
