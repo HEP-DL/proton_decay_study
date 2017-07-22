@@ -8,6 +8,7 @@ import csv
 import os
 import six
 from collections import OrderedDict
+import numpy as np
 
 
 class HistoryRecord(Callback):
