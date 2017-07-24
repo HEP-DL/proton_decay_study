@@ -22,7 +22,7 @@ class BaseNet(Model):
     self.generator = generator
     layer = self.assemble()
     super(BaseNet, self).__init__(self._input, layer)
-    self.sgd = optimizers.RMSprop(lr=1e-2, rho=0.999, epsilon=1e-6, decay=1e-6)
+    self.sgd = optimizers.RMSprop(lr=1e-9, rho=0.999, epsilon=1e-9, decay=1e-9)
     self.logger.info("Compiling...")
     self.compile(loss='mean_squared_error', optimizer=self.sgd,
                  metrics=['accuracy'])
