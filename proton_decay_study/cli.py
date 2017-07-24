@@ -210,7 +210,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
     global _model
     _model = model
     if weights is not None:
-      model.load_weights(weights)
+      model.load_weights(weights, by_name=True)
     model_checkpoint = ModelCheckpoint(output,
                                        monitor='loss',
                                        verbose=1,
@@ -242,3 +242,15 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
     with open(history, 'w') as history_output:
       history_output.write(json.dumps(training_history))
     logger.info("Done.")
+
+
+@click.command()
+@click.option('--output', default='.')
+@click.option('--factor', default=6, type=click.INT)
+@click.argument('file_list', nargs=-1)
+def downsample_hep_files(output, factor, file_list):
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+  import h5py
+  for _filename in file_list:
+    _file = h5py.File(_filename, 'r')

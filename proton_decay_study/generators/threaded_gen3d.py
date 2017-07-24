@@ -19,10 +19,6 @@ class SingleFileThread(threading.Thread):
     the daughter threads in good time.
   """
 
-  # Locks class for the duration of parent lifetime
-  # Currently, hierarchal threading is not supported
-  threadLock = threading.Lock()
-
   # Set this to 0 to kill all threads once prefetch is finished.
   __ThreadExitFlag__ = 1
 
@@ -155,7 +151,6 @@ class SingleFileThread(threading.Thread):
 
   @staticmethod
   def status():
-    SingleFileThread.logger.debug("ThreadLock: {}".format(SingleFileThread.threadLock.locked()))
     SingleFileThread.logger.debug("QueueLock: {}".format(SingleFileThread.queueLock.locked()))
     SingleFileThread.logger.debug("Flag: {}".format(SingleFileThread.__ThreadExitFlag__))
 
@@ -173,7 +168,7 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
   logger = logging.getLogger("pdk.gen.threaded_multi")
 
   def __init__(self, datapaths, datasetname,
-               labelsetname, batch_size=1, nThreads=8):
+               labelsetname, batch_size=1, nThreads=4):
     self.datapaths = [i for i in datapaths]
     self.nThreads = nThreads
     self.datasetname = datasetname
@@ -182,7 +177,6 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     self.current_thread_index = 0
 
   def __enter__(self):
-    SingleFileThread.threadLock.acquire()
     for i in range(len(self.datapaths)):
       random.shuffle(self.datapaths)
     self.check_and_refill()
@@ -194,7 +188,6 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   def __exit__(self ,type, value, traceback):
     self.kill_child_processes()
-    SingleFileThread.threadLock.release()
     return True
     
   def kill_child_processes(self):
