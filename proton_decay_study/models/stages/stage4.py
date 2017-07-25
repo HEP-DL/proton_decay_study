@@ -5,6 +5,7 @@ import logging
 
 class Stage4(Stage3):
   logger = logging.getLogger('pdk.stage4')
+  fc_name='fc_stage4'
 
   def assemble_layers(self, layer):
     layer = super(Stage4, self).assemble_layers(layer)
@@ -14,9 +15,11 @@ class Stage4(Stage3):
                    kernel_initializer='random_uniform',
                    bias_initializer='zeros',
                    kernel_regularizer=l2(0.01),
-                   activity_regularizer=l1(0.01))(layer)
+                   activity_regularizer=l1(0.01),
+                   name='conv4_1')(layer)
     self.logger.info(layer)
     layer = MaxPooling3D((1, 2, 2), strides=(1, 2, 2),
-                         data_format='channels_first')(layer)
+                         data_format='channels_first',
+                         name='pool4_1')(layer)
     self.logger.info(layer)
     return layer

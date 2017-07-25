@@ -16,6 +16,7 @@ class BaseNet(Model):
   In Soundwaves of Gold
   """
   logger = logging.getLogger('pdk.basenet')
+  fc_name='fc_base'
 
   def __init__(self, generator):
     
@@ -30,7 +31,8 @@ class BaseNet(Model):
 
   def pre_assemble(self):
     self._input = Input(shape=self.generator.output,
-                        dtype='float32')
+                        dtype='float32',
+                        name='input_1')
     self.logger.info(self._input)
     return self._input
 
@@ -42,7 +44,8 @@ class BaseNet(Model):
                   kernel_initializer='random_uniform',
                   bias_initializer='zeros',
                   kernel_regularizer=l2(0.01),
-                  activity_regularizer=l1(0.01))(layer)
+                  activity_regularizer=l1(0.01),
+                  name=self.fc_name)(layer)
     self.logger.info(layer)
     return layer
 

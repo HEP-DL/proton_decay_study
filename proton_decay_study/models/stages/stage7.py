@@ -5,6 +5,7 @@ import logging
 
 class Stage7(Stage6):
   logger = logging.getLogger('pdk.stage7')
+  fc_name='fc_stage6'
 
   def assemble_layers(self, layer):
     layer = super(Stage7, self).assemble_layers(layer)
