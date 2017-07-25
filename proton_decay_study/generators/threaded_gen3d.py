@@ -188,7 +188,8 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
 
   def __exit__(self ,type, value, traceback):
     self.kill_child_processes()
-    return True
+    # Return value must be false in order to handle exceptions
+    return False
     
   def kill_child_processes(self):
     SingleFileThread.__ThreadExitFlag__ = 0

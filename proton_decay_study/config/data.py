@@ -18,3 +18,4 @@ class DataSplit(object):
       description[group].append(_file)
 
     for group in description:
+      pass
