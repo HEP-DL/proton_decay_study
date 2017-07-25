@@ -206,6 +206,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   logger = logging.getLogger()
 
   with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+    model = stages[stage](generator)
     global _model
     _model = model
     if weights is not None:
