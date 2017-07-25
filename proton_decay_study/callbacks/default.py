@@ -50,6 +50,8 @@ class HistoryRecord(Callback):
                 return k
             elif isinstance(k, Iterable) and not is_zero_dim_ndarray:
                 return '"[%s]"' % (', '.join(map(str, k)))
+            elif isinstance(k, float):
+                return repr(k)
             else:
                 return k
 

@@ -206,7 +206,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
   logger = logging.getLogger()
 
   with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
-    model = stages[stage](generator)
+    b
     global _model
     _model = model
     if weights is not None:
@@ -221,7 +221,13 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                        )
     history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
     es_callback =  EarlyStopping(monitor='loss', min_delta=1e-10, patience=10, verbose=1, mode='auto')
-    tb_callback = TensorBoard(write_grads=True, write_images=True, histogram_freq=10)
+    log_dir = os.path.join('.','logs','{}'.format(stage))
+    if not os.path.isdir(log_dir):
+      os.makedirs(log_dir)
+    tb_callback = TensorBoard(log_dir=log_dir,
+                              write_grads=True, 
+                              write_images=True,
+                              histogram_freq=10)
     logging.info("Starting Training [Moving to GPU]")
     training_output = model.fit_generator(generator,
                                           use_multiprocessing=False,
@@ -243,14 +249,3 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
       history_output.write(json.dumps(training_history))
     logger.info("Done.")
 
-
-@click.command()
-@click.option('--output', default='.')
-@click.option('--factor', default=6, type=click.INT)
-@click.argument('file_list', nargs=-1)
-def downsample_hep_files(output, factor, file_list):
-  logging.basicConfig(level=logging.DEBUG)
-  logger = logging.getLogger()
-  import h5py
-  for _filename in file_list:
-    _file = h5py.File(_filename, 'r')
