@@ -191,7 +191,6 @@ class ThreadedMultiFileDataGenerator(BaseDataGenerator):
     return True
     
   def kill_child_processes(self):
-    self.status()
     SingleFileThread.__ThreadExitFlag__ = 0
     for t in SingleFileThread.activeThreads:
        t.join(10.0)
