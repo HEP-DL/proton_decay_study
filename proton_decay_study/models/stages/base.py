@@ -25,7 +25,8 @@ class BaseNet(Model):
     super(BaseNet, self).__init__(self._input, layer)
     self.sgd = optimizers.RMSprop(lr=1e-9, rho=0.999, epsilon=1e-9, decay=1e-9)
     self.logger.info("Compiling...")
-    self.compile(loss='mean_squared_error', optimizer=self.sgd,
+    #could also do mean_squared_error
+    self.compile(loss='kullback_leibler_divergence', optimizer=self.sgd,
                  metrics=['accuracy'])
     self.logger.info("Finished Compiling Network")
 
