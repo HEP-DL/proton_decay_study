@@ -12,6 +12,8 @@ class Gen3D(BaseDataGenerator):
   def __init__(self, datapaths, datasetname, 
                labelsetname, batch_size=10):
     self._files = [ i for i in datapaths]
+    import random
+    random.shuffle(self._files)
 
     self._dataset = datasetname
     self._labelset = labelsetname

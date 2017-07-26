@@ -217,8 +217,10 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
   
   generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1)
 #  pdb.set_trace()
-  end = max(len(file_list)-10,0)
-  validation_generator = Gen3D(file_list[end:], 'image/wires', 'label/type', batch_size=1)
+#  end = max(len(file_list)-10,0)
+  import glob
+  file_list_v =  glob.glob("/microboone/ec/valid_singles/*")
+  validation_generator = Gen3D(file_list_v, 'image/wires', 'label/type', batch_size=1)
 
   model = Nothinbutnet(generator)
   global _model
@@ -228,9 +230,11 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
   logging.info("Starting Training")
   training_output = model.fit_generator(generator, steps_per_epoch = steps, 
                                       epochs=epochs,
-                                      workers=4,
+#                                      workers=4,
+                                      workers=1,
                                       verbose=1,
-                                      max_q_size=8,
+#                                      max_q_size=8,
+                                      max_q_size=4,
                                       pickle_safe=False,
                                       validation_data=validation_generator,
                                       validation_steps = steps,
@@ -246,9 +250,17 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
                                       ])
   model.save(output)
 
-#  pdb.set_trace()
-  pred100 = model.predict_generator(validation_generator,10) # 100 event predictions from last iteration of model -- I think
-  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': pred100.tolist()} # len(validation_generator)
+  pdb.set_trace()
+#  pred10 = model.predict_generator(validation_generator,10) # 10 event predictions from last iteration of model -- I think
+  import numpy as np
+  pred10 = np.empty((0,10))
+  label10 = np.empty((0,10))
+  for i in range(10):
+      x,y = validation_generator.next()
+      pred10 = np.row_stack((pred10,model.predict(x) ) ) # 10 event predictions from last iteration of model -- I think
+      label10 = np.row_stack((label10,y) )  # 10 event predictions from last iteration of model -- I think
+
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': pred10.tolist(), 'val_labels': label10.tolist() }
   import json
   open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
