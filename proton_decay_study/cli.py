@@ -4,7 +4,7 @@ import sys
 import click
 import logging
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard
+from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard, ReduceLROnPlateau
 
 
 @click.command()
@@ -222,7 +222,10 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                        )
     history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
     es_callback =  EarlyStopping(monitor='loss', min_delta=1e-10, patience=10, verbose=1, mode='auto')
-    log_dir = os.path.join('.','logs','{}'.format(stage))
+    # TODO: ReduceLROnPlateau
+    lr_callback = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1, 
+                                    mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
+    log_dir = os.path.join('.','logs','stage_{}'.format(stage))
     if not os.path.isdir(log_dir):
       os.makedirs(log_dir)
     tb_callback = TensorBoard(log_dir=log_dir,
@@ -238,7 +241,8 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                           callbacks=[model_checkpoint,
                                                      history_checkpoint, 
                                                      es_callback,
-                                                     tb_callback],
+                                                     tb_callback,
+                                                     lr_callback],
                                           epochs=epochs, 
                                           steps_per_epoch=steps)
     model.save(output)
