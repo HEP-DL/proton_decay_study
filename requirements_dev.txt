@@ -2,7 +2,7 @@ sphinx-rtd-theme==0.2.4
 backports-abc==0.5
 click==6.7
 configparser==3.5.0
-flake8==3.4.0
+flake8==3.4.1
 future==0.16.0
 Keras>=2.0.0
 matplotlib==2.0.2
