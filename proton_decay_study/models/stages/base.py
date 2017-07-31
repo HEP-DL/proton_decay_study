@@ -40,8 +40,8 @@ class BaseNet(Model):
   def post_assemble(self, layer):
     layer = Flatten(name='flatten_{}'.format(self.fc_name))(layer)
     self.logger.info(layer)
-    layer = Dense(self.generator.input,
-                  activation='softmax',
+    layer = Dense(1024, self.generator.input,
+                  activation='sigmoid',
                   kernel_initializer='random_uniform',
                   bias_initializer='zeros',
                   kernel_regularizer=l2(0.01),

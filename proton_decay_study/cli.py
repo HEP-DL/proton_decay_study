@@ -221,7 +221,7 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
                                        period=1
                                        )
     history_checkpoint = HistoryRecord(history.replace('.json','.csv'))
-    es_callback =  EarlyStopping(monitor='loss', min_delta=1e-10, patience=10, verbose=1, mode='auto')
+    es_callback =  EarlyStopping(monitor='loss', min_delta=1e-10, patience=20, verbose=1, mode='auto')
     # TODO: ReduceLROnPlateau
     lr_callback = ReduceLROnPlateau(monitor='loss', factor=0.1, patience=5, verbose=1, 
                                     mode='auto', epsilon=0.0001, cooldown=0, min_lr=0)
