@@ -3,8 +3,6 @@ import os
 import sys
 import click
 import logging
-from proton_decay_study.generators.multi_file import MultiFileDataGenerator
-from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard, ReduceLROnPlateau
 
 
 @click.command()
@@ -80,6 +78,7 @@ def test_threaded_file_input(n_gen, file_list):
 @click.option('--output', default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 def train_kevnet(steps, epochs, weights, history, output, file_list):
+  from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard, ReduceLROnPlateau
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   from proton_decay_study.models.kevnet import Kevnet
   from proton_decay_study.callbacks.default import HistoryRecord
@@ -148,6 +147,8 @@ def make_kevnet_featuremap(input, weights):
 @click.option('--output', default='stage1.h5')
 @click.argument('file_list', nargs=-1)
 def train_widenet(steps, epochs, weights, history, output, file_list):
+  from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+  from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard, ReduceLROnPlateau
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   from proton_decay_study.models.widenet import Kevnet
   from proton_decay_study.callbacks.default import HistoryRecord
@@ -200,6 +201,8 @@ def train_widenet(steps, epochs, weights, history, output, file_list):
 @click.option('--stage', default=0, type=click.INT)
 @click.argument('file_list', nargs=-1)
 def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
+  from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+  from keras.callbacks import ModelCheckpoint, CSVLogger, EarlyStopping, TensorBoard, ReduceLROnPlateau
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   from proton_decay_study.models.stages import stages
   from proton_decay_study.callbacks.default import HistoryRecord
@@ -256,19 +259,20 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
 
 @click.command()
 @click.option('--nimages', default=1000, type=click.INT)
-@click.option('--output', default="", type=click.STRING)
+@click.option('--output', default="test_gen.csv", type=click.STRING)
 @click.argument('file_list', nargs=-1)
 def test_gen(nimages, output, file_list):
   from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
   import csv
   import datetime
+  from tqdm import tqdm
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
 
   with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
     with open(output, 'w') as output_file:
-      for i in range(nimages):
+      for i in tqdm(range(nimages)):
         beginning =  datetime.datetime.now()
-        generators.next()
+        generator.next()
         end = datetime.datetime.now()
         output_file.writelines([(end-beginning).totalseconds()])

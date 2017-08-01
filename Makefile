@@ -28,6 +28,9 @@ docs:
 	$(MAKE) -C docs html
 
 install: clean
+	pip install -U pip
+	pip install -U setuptools
+	pip install tensorflow-gpu
 	pip install -r requirements.txt
 	python setup.py install
 
