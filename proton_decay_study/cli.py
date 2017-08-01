@@ -275,4 +275,4 @@ def test_gen(nimages, output, file_list):
         beginning =  datetime.datetime.now()
         generator.next()
         end = datetime.datetime.now()
-        output_file.writelines([(end-beginning).total_seconds()])
+        output_file.writelines(["{}".format((end-beginning).total_seconds())])
