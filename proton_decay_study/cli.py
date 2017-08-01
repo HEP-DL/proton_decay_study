@@ -8,7 +8,7 @@ import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
 
-from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard, ReduceLROnPlateau
 import signal
 import sys
 import os
@@ -245,22 +245,35 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
                                           save_best_only=True, 
                                           save_weights_only=True, 
                                           mode='auto', 
-
-                                          period=10)
+                                          period=10),
+                                        ReduceLROnPlateau(monitor='loss', # I changed from val_loss
+                                          factor=0.1, 
+                                          patience=3, # epochs
+                                          verbose=True, 
+                                          mode='auto', 
+                                          epsilon=0.0001, 
+                                          cooldown=0, 
+                                          min_lr=0.001),
+                                          TensorBoard(log_dir='./logs',
+                                                      histogram_freq=1, 
+                                                      write_graph=True, 
+                                                      write_grads=True, 
+                                                      write_images=True)
                                       ])
   model.save(output)
 
-  pdb.set_trace()
+#  pdb.set_trace()
 #  pred10 = model.predict_generator(validation_generator,10) # 10 event predictions from last iteration of model -- I think
   import numpy as np
   pred10 = np.empty((0,10))
   label10 = np.empty((0,10))
-  for i in range(10):
+  for i in range(610):
       x,y = validation_generator.next()
-      pred10 = np.row_stack((pred10,model.predict(x) ) ) # 10 event predictions from last iteration of model -- I think
-      label10 = np.row_stack((label10,y) )  # 10 event predictions from last iteration of model -- I think
+      if i>590:
+          pred10 = np.row_stack((pred10,model.predict(x) ) ) # 10 event predictions from last iteration of model -- I think
+          label10 = np.row_stack((label10,y) )  # 10 event predictions from last iteration of model -- I think
 
-  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': pred10.tolist(), 'val_labels': label10.tolist() }
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': np.around(pred10.tolist(),decimals=3), 'val_labels': np.around(label10.tolist(),decimals=3) }
   import json
   open(history,'w').write(json.dumps(training_history))
   logger.info("Done.")
