@@ -269,10 +269,10 @@ def test_gen(nimages, output, file_list):
   logging.basicConfig(level=logging.DEBUG)
   logger = logging.getLogger()
 
-  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1,nThreads=8) as generator:
     with open(output, 'w') as output_file:
       for i in tqdm(range(nimages)):
         beginning =  datetime.datetime.now()
         generator.next()
         end = datetime.datetime.now()
-        output_file.writelines(["{}".format((end-beginning).total_seconds())])
+        output_file.writelines(["{}\n".format((end-beginning).total_seconds())])
