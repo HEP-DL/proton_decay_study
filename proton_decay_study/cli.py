@@ -254,3 +254,21 @@ def train_stagenet(steps, epochs, weights, history, output, stage, file_list):
       history_output.write(json.dumps(training_history))
     logger.info("Done.")
 
+@click.command()
+@click.option('--nimages', default=1000, type=click.INT)
+@click.option('--output', default="", type=click.STRING)
+@click.argument('file_list', nargs=-1)
+def test_gen(nimages, output, file_list):
+  from proton_decay_study.generators.threaded_gen3d import ThreadedMultiFileDataGenerator
+  import csv
+  import datetime
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+
+  with ThreadedMultiFileDataGenerator(file_list, 'image/wires', 'label/type', batch_size=1) as generator:
+    with open(output, 'w') as output_file:
+      for i in range(nimages):
+        beginning =  datetime.datetime.now()
+        generators.next()
+        end = datetime.datetime.now()
+        output_file.writelines([(end-beginning).totalseconds()])

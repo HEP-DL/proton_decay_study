@@ -38,7 +38,8 @@ setup(
             'train_kevnet=proton_decay_study.cli:train_kevnet',
             'train_widenet=proton_decay_study.cli:train_widenet',
             'train_stagenet=proton_decay_study.cli:train_stagenet',
-            'make_kevnet_featuremap=proton_decay_study.cli:make_kevnet_featuremap'
+            'make_kevnet_featuremap=proton_decay_study.cli:make_kevnet_featuremap',
+            'test_gen=proton_decay_study.cli:test_gen'
         ]
     },
     include_package_data=True,
