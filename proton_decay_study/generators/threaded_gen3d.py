@@ -3,7 +3,10 @@ from .base import BaseDataGenerator
 from .single_file_3d import Gen3D
 import logging
 import threading
-import queue
+try:
+  import queue
+except:
+  import Queue as queue
 import traceback
 import signal
 import sys
