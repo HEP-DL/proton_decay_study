@@ -14,9 +14,9 @@ class BaseNet(Model):
     self.generator = generator
     layer = self.assemble()
     super(BaseNet, self).__init__(self._input, layer)
-    self.sgd = optimizers.RMSprop(lr=1e-9, rho=0.999, epsilon=1e-9, decay=1e-9)
+    self.rms_prop = optimizers.RMSprop(lr=1e-9, rho=0.999, epsilon=1e-9, decay=1e-9)
     self.logger.info("Compiling...")
-    self.compile(loss='kullback_leibler_divergence', optimizer=self.sgd,
+    self.compile(loss='kullback_leibler_divergence', optimizer=self.rms_prop,
                  metrics=['accuracy'])
     self.logger.info("Finished Compiling Network")
 
