@@ -20,9 +20,32 @@ class Gen3D(BaseDataGenerator):
     self.batch_size = batch_size
     self.file_index=0
     self.current_index=0
+    self.truth = ["eminus", "eplus", "proton", "pizero", "piplus", "piminus", "muminus",  "muplus",  "kplus", "gamma"]
+    self.labelvec = np.zeros(10)
+    
     self.logger.info("Initializing h5 file object with value: {}".format(self._files[self.current_index]))
-    self.current_file = h5py.File(self._files[self.current_index], 'r')
 
+    self.current_file = h5py.File(self._files[self.current_index], 'r')
+    self.handle1evtfiles()
+
+
+  def handle1evtfiles(self):
+#    import pdb
+#    pdb.set_trace()
+    if len(self.current_file['image']) is not 2 and len(self.current_file['image'].shape) is 3: # These are Artem's single-event files.
+      x = np.moveaxis(self.current_file['image'],2,0)
+      y = np.expand_dims(x, axis=0)
+      d = {}
+      ptype = str(self._files[self.current_index].split("/")[-1].split("_")[0]) # "kplus", say
+      self._dataset = self.current_file.keys()[0]
+      self._labelset = self.current_file.keys()[1]
+      d[self._dataset] = y
+      labelvectmp = np.array(self.labelvec)
+      labelvectmp[self.truth.index(ptype)] = 1
+      # pdb.set_trace()
+      d[self._labelset] = np.expand_dims(labelvectmp,axis=0)
+      self.current_file = d
+    return
 
   @property
   def output(self):
@@ -40,6 +63,8 @@ class Gen3D(BaseDataGenerator):
     x,y = self.next()
     self.current_index =current_index
     self.file_index = file_index
+    # import pdb
+    # pdb.set_trace()
     return y[0].shape[0]
 
   def __len__(self):
@@ -63,11 +88,15 @@ class Gen3D(BaseDataGenerator):
       self.file_index +=1
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
+      self.handle1evtfiles()
       self.current_index=0
     if self.file_index >= len(self._files):
       self.logger.info("Reached end of file stack. Now reusing data")
       self.file_index = 0 
       self.current_index = 0
+
+    import pdb
+#    pdb.set_trace()
     if self.current_index+self.batch_size>self.current_file[self._dataset].shape[0]:
       self.logger.info("Stitching together files")
       """
@@ -82,6 +111,7 @@ class Gen3D(BaseDataGenerator):
       self.file_index+=1
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
+      self.handle1evtfiles()
       self.current_index=0
       if self.file_index<len(self._files):
         self.logger.info("Now moving to next file: {}".format(self._files[self.file_index]))
@@ -90,6 +120,7 @@ class Gen3D(BaseDataGenerator):
         return next(self)
       return (x,y)
     tmp_x = self.current_file[self._dataset][self.current_index:self.current_index+self.batch_size]
+#    pdb.set_trace()
     x = np.ndarray(shape=(1, tmp_x.shape[0],  tmp_x.shape[1],  tmp_x.shape[2],  tmp_x.shape[3]))
     x[0] = tmp_x
     y = self.current_file[self._labelset][self.current_index:self.current_index+self.batch_size]

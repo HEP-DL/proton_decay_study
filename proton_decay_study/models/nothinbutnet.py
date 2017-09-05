@@ -86,7 +86,7 @@ class Nothinbutnet(Model):
 
     super(Nothinbutnet, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
-    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
+    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['categorical_accuracy'])
 
 
 
