@@ -7,6 +7,7 @@ import logging
 import tensorflow as tf
 from proton_decay_study.models.vgg16 import VGG16
 from proton_decay_study.generators.multi_file import MultiFileDataGenerator
+from proton_decay_study.utils_kuza55.multi_gpu import make_parallel
 
 from keras.callbacks import ModelCheckpoint, EarlyStopping, TensorBoard, ReduceLROnPlateau
 import signal
@@ -368,6 +369,86 @@ def train_nbn_prl(steps, epochs,weights, history, output, file_list):
           label10 = np.row_stack((label10,y) )  # 10 event predictions from last iteration of model -- I think
 
           
+
+  training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': np.around(pred10.tolist(),decimals=3), 'val_labels': np.around(label10.tolist(),decimals=3) }
+  import json
+  open(history,'w').write(json.dumps(training_history))
+  logger.info("Done.")
+
+
+def train_nbn_prl(steps, epochs,weights, history, output, file_list):
+  from proton_decay_study.generators.gen3d import Gen3D
+  from proton_decay_study.models.nothinbutnet import Nothinbutnet
+  import tensorflow as tf
+  logging.basicConfig(level=logging.DEBUG)
+  logger = logging.getLogger()
+
+  init = tf.global_variables_initializer()
+
+  with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+    sess.run(init)
+
+  import pdb
+  
+  generator = Gen3D(file_list, 'image/wires','label/type', batch_size=1*4)
+#  pdb.set_trace()
+#  end = max(len(file_list)-10,0)
+  import glob
+  file_list_v =  glob.glob("/microboone/ec/valid_singles/*")
+  validation_generator = Gen3D(file_list_v, 'image/wires', 'label/type', batch_size=1*4)
+
+  model = Nothinbutnet(generator)
+  global _model
+  _model = model
+  if weights is not None:
+    model.load_weights(weights)
+
+  model = make_parallel(model,4)
+  logging.info("Starting Training")
+  training_output = model.fit_generator(generator, steps_per_epoch = steps, 
+                                      epochs=epochs,
+#                                      workers=4,
+                                      workers=1,
+                                      verbose=1,
+#                                      max_q_size=8,
+                                      max_q_size=4,
+                                      pickle_safe=False,
+                                      validation_data=validation_generator,
+                                      validation_steps = steps,
+                                      callbacks=[
+                                        ModelCheckpoint(output, 
+                                          monitor='loss', 
+                                          verbose=1, 
+                                          save_best_only=True, 
+                                          save_weights_only=True, 
+                                          mode='auto', 
+                                          period=10),
+                                        ReduceLROnPlateau(monitor='loss', # I changed from val_loss
+                                          factor=0.1, 
+                                          patience=3, # epochs
+                                          verbose=True, 
+                                          mode='auto', 
+                                          epsilon=0.0001, 
+                                          cooldown=0, 
+                                          min_lr=0.001),
+                                          TensorBoard(log_dir='./logs',
+                                                      histogram_freq=1, 
+                                                      write_graph=True, 
+                                                      write_grads=True, 
+                                                      write_images=True)
+                                      ])
+  model.save(output)
+
+#  pdb.set_trace()
+#  pred10 = model.predict_generator(validation_generator,10) # 10 event predictions from last iteration of model -- I think
+  import numpy as np
+  pred10 = np.empty((0,10))
+  label10 = np.empty((0,10))
+  for i in range(610):
+      x,y = validation_generator.next()
+      if i>590:
+          pred10 = np.row_stack((pred10,model.predict(x) ) ) # 10 event predictions from last iteration of model -- I think
+          label10 = np.row_stack((label10,y) )  # 10 event predictions from last iteration of model -- I think
 
   training_history = {'epochs': training_output.epoch, 'acc': training_output.history['acc'], 'loss': training_output.history['loss'], 'val_acc': training_output.history['val_acc'], 'val_loss': training_output.history['val_loss'], 'val_predictions': np.around(pred10.tolist(),decimals=3), 'val_labels': np.around(label10.tolist(),decimals=3) }
   import json
