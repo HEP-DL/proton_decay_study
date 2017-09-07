@@ -221,7 +221,7 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
 #  end = max(len(file_list)-10,0)
   import glob
 #  file_list_v =  glob.glob("/microboone/ec/valid_singles/*")
-  file_list_v =  glob.glob("/data/dlhep/quantized_h5files/*")
+  file_list_v =  glob.glob("/data/dlhep/quantized_h5files/*.h5")
   validation_generator = Gen3D(file_list_v, 'image/wires', 'label/type', batch_size=1)
 
   model = Nothinbutnet(generator)
@@ -259,7 +259,7 @@ def train_nbn(steps, epochs,weights, history, output, file_list):
 #                                          TensorBoard(log_dir='./logs2',
 #                                                      histogram_freq=1, 
 #                                                      write_graph=True, 
-#                                                      write_grads=True) 
+#                                                      write_grads=True,
 #                                                      write_images=True)
                                       ])
   model.save(output)

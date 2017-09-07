@@ -26,23 +26,25 @@ class Gen3D(BaseDataGenerator):
     self.logger.info("Initializing h5 file object with value: {}".format(self._files[self.current_index]))
 
     self.current_file = h5py.File(self._files[self.current_index], 'r')
-    self.handle1evtfiles()
+    self.handle1evtfiles(self.current_index)
 
 
-  def handle1evtfiles(self):
-#    import pdb
-#    pdb.set_trace()
+  def handle1evtfiles(self,index):
+    import pdb
     if len(self.current_file['image']) is not 2 and len(self.current_file['image'].shape) is 3: # These are Artem's single-event files.
+      # We now proceed to make this data have the structure of the multi-event files.
       x = np.moveaxis(self.current_file['image'],2,0)
       y = np.expand_dims(x, axis=0)
       d = {}
-      ptype = str(self._files[self.current_index].split("/")[-1].split("_")[0]) # "kplus", say
+#      pdb.set_trace()
+      ptype = str(self._files[index].split("/")[-1].split("_")[0]) # "kplus", say
       self._dataset = self.current_file.keys()[0]
       self._labelset = self.current_file.keys()[1]
       d[self._dataset] = y
       labelvectmp = np.array(self.labelvec)
+#      print "handle1evtfiles: particle and index are: " + str(ptype) + "  " + str(self.truth.index(ptype))
       labelvectmp[self.truth.index(ptype)] = 1
-      # pdb.set_trace()
+
       d[self._labelset] = np.expand_dims(labelvectmp,axis=0)
       self.current_file = d
     return
@@ -72,8 +74,17 @@ class Gen3D(BaseDataGenerator):
       Iterates over files to create the total sum length
       of the datasets in each file.
     """
-    return sum([h5py.File(i,'r')[self._dataset].shape[0] for i in self._files] )
+    ### uggh. This is v slow, especially with tons of 1-event files.
+#    return sum([h5py.File(i,'r')[self._dataset].shape[0] for i in self._files] )
+    ### Let's just take a guess. Not sure we use this number anyway.
+    return len(self._files) * h5py.File(self._files[0],'r')[self._dataset].shape[0] 
 
+
+  def debug_signal_handler(signal, frame):
+    import pdb
+    pdb.set_trace()
+  import signal
+#  signal.signal(signal.SIGINT, debug_signal_handler)
 
   def next(self):
     """
@@ -88,7 +99,7 @@ class Gen3D(BaseDataGenerator):
       self.file_index +=1
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
-      self.handle1evtfiles()
+      self.handle1evtfiles(self.file_index)
       self.current_index=0
     if self.file_index >= len(self._files):
       self.logger.info("Reached end of file stack. Now reusing data")
@@ -96,9 +107,16 @@ class Gen3D(BaseDataGenerator):
       self.current_index = 0
 
     import pdb
-#    pdb.set_trace()
-    if self.current_index+self.batch_size>self.current_file[self._dataset].shape[0]:
+
+    multifile = False
+    xapp = np.empty(np.append(1,self.current_file[self._dataset].shape))
+    yapp = np.empty(self.current_file[self._labelset].shape)
+    nevts = 0
+
+    while self.batch_size > (self.current_file[self._dataset].shape[0]+nevts):
+      multifile = True
       self.logger.info("Stitching together files")
+
       """
         This is the rare case of stitching together more than 1 file by crossing the boundary.
       """
@@ -107,20 +125,26 @@ class Gen3D(BaseDataGenerator):
       tmp_x =  self.current_file[self._dataset][self.current_index:]
       x = np.ndarray(shape=(1, tmp_x.shape[0],  tmp_x.shape[1],  tmp_x.shape[2],  tmp_x.shape[3]))
       x[0] = tmp_x 
-      y =  self.current_file[self._labelset][self.current_index:]
+      y = self.current_file[self._labelset][self.current_index:]
       self.file_index+=1
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
-      self.handle1evtfiles()
+      self.handle1evtfiles(self.file_index)
       self.current_index=0
       if self.file_index<len(self._files):
         self.logger.info("Now moving to next file: {}".format(self._files[self.file_index]))
-      self.current_index = remainder
+      self.current_index = min(remainder,tmp_x.shape[0]-1)
       if len(x) == 0 or len(y)==0 or not len(x) == len(y):
         return next(self)
-      return (x,y)
-    tmp_x = self.current_file[self._dataset][self.current_index:self.current_index+self.batch_size]
+      xapp = np.append(xapp,x,axis=0)
+      yapp = np.append(yapp,y,axis=0)
+      nevts = xapp.shape[0]
+
+    if multifile:
+      return (xapp,yapp)
+
 #    pdb.set_trace()
+    tmp_x = self.current_file[self._dataset][self.current_index:self.current_index+self.batch_size]
     x = np.ndarray(shape=(1, tmp_x.shape[0],  tmp_x.shape[1],  tmp_x.shape[2],  tmp_x.shape[3]))
     x[0] = tmp_x
     y = self.current_file[self._labelset][self.current_index:self.current_index+self.batch_size]
