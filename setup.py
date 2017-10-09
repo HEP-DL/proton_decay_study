@@ -41,7 +41,7 @@ setup(
             'plot_model=proton_decay_study.cli:plot_model',
             'train_kevnet=proton_decay_study.cli:train_kevnet',
             'train_nbn=proton_decay_study.cli:train_nbn',
-            'train_nb_prl=proton_decay_study.cli:train_nbn_prl',
+            'train_nbn_prl=proton_decay_study.cli:train_nbn_prl',
             'make_kevnet_featuremap=proton_decay_study.cli:make_kevnet_featuremap'
         ]
     },

@@ -2,7 +2,8 @@ from proton_decay_study.generators.base import BaseDataGenerator
 import h5py
 import logging
 import numpy as np
-
+import pdb
+    
 class Gen3D(BaseDataGenerator):
   """
     Creates a generator for a list of files
@@ -10,27 +11,43 @@ class Gen3D(BaseDataGenerator):
   logger = logging.getLogger("pdk.gen.gen3d")
 
   def __init__(self, datapaths, datasetname, 
-               labelsetname, batch_size=10):
+               labelsetname, batch_size=10, middle=False):
     self._files = [ i for i in datapaths]
     import random
     random.shuffle(self._files)
 
+    self._middle = middle
     self._dataset = datasetname
     self._labelset = labelsetname
     self.batch_size = batch_size
     self.file_index=0
     self.current_index=0
-    self.truth = ["eminus", "eplus", "proton", "pizero", "piplus", "piminus", "muminus",  "muplus",  "kplus", "gamma"]
+#    self.truth = ["eminus", "eplus", "proton", "pizero", "piplus", "piminus", "muminus",  "muplus",  "kplus", "gamma"]
+    self.truth = ["eplus",  "piminus", "muminus",   "kplus", "gamma"]
     self.labelvec = np.zeros(10)
     
     self.logger.info("Initializing h5 file object with value: {}".format(self._files[self.current_index]))
 
     self.current_file = h5py.File(self._files[self.current_index], 'r')
     self.handle1evtfiles(self.current_index)
+    self.middlePane()
+
+
+  def middlePane(self):
+    # grab the middle of the 3 MicroBooNE 3200-tick drifts. This works for MC. Data will be truncated, and we may want a different low, high here!
+    if self._middle:
+      low = self.current_file['image'].shape[2] / 3 - 2400
+      high = self.current_file['image'].shape[2] * 2/3 - 800
+
+#      print "clipping out only the middle time-ticks and wires " + str(low) +":" + str(high)
+#      self.current_file['image'] = self.current_file['image'][:,:,low:high,:]
+
+      x = self.current_file['image'][:,:,low:high,:]
+      x[x<40] = 0
+      self.current_file['image'] = x
 
 
   def handle1evtfiles(self,index):
-    import pdb
     if len(self.current_file['image']) is not 2 and len(self.current_file['image'].shape) is 3: # These are Artem's single-event files.
       # We now proceed to make this data have the structure of the multi-event files.
       x = np.moveaxis(self.current_file['image'],2,0)
@@ -100,13 +117,14 @@ class Gen3D(BaseDataGenerator):
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
       self.handle1evtfiles(self.file_index)
+      self.middlePane()
       self.current_index=0
     if self.file_index >= len(self._files):
       self.logger.info("Reached end of file stack. Now reusing data")
       self.file_index = 0 
       self.current_index = 0
 
-    import pdb
+#    import pdb
 
     multifile = False
     xapp = np.empty(np.append(1,self.current_file[self._dataset].shape))
@@ -130,6 +148,7 @@ class Gen3D(BaseDataGenerator):
       if self.file_index == len(self._files): self.file_index=0
       self.current_file = h5py.File(self._files[self.file_index], 'r')
       self.handle1evtfiles(self.file_index)
+      self.middlePane()
       self.current_index=0
       if self.file_index<len(self._files):
         self.logger.info("Now moving to next file: {}".format(self._files[self.file_index]))

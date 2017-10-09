@@ -1,10 +1,11 @@
 from keras.layers import Input, merge, Dropout, Dense, Flatten, Activation
-from keras.layers.convolutional import MaxPooling2D, Conv2D
+from keras.layers.convolutional import MaxPooling2D, Conv2D, MaxPooling3D
 from keras.layers.normalization import BatchNormalization
 from keras.models import Model
 
 from keras import backend as K
 from keras.utils.data_utils import get_file
+from keras import optimizers as O
 import logging
 
 
@@ -15,11 +16,19 @@ class VGG16(Model):
 
     self.generator = generator
     self.logger.info("Assembling Model")
-    self._input = Input(shape=generator.output)
+
+    x = generator.output
+    self._input = Input(shape=x)
+
     self.logger.info(self._input.shape)
 
+    # drop this to ~240x240 before even getting going, as a "sanity" check.
+    layer = MaxPooling2D((12, 16), strides=(12, 16),  data_format='channels_first', 
+                          name='block0_pool')(self._input)
+    self.logger.info(layer.shape)
+
     layer = Conv2D(32, 3, activation='relu', padding='same', data_format='channels_first',
-                          name='block1_conv1')(self._input)
+                          name='block1_conv1')(layer)
     self.logger.info(layer.shape)
     layer = Conv2D(32, 3, activation='relu', padding='same', data_format='channels_first' ,
                           name='block1_conv2')(layer)
@@ -84,4 +93,8 @@ class VGG16(Model):
     
     super(VGG16, self).__init__(self._input, layer)
     self.logger.info("Compiling Model")
-    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
+
+    ogd = O.SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+    self.compile(loss='binary_crossentropy', optimizer=ogd, metrics=['categorical_accuracy'])
+
+#    self.compile(loss='binary_crossentropy', optimizer='sgd', metrics=['accuracy'])
