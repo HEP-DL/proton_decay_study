@@ -8,6 +8,6 @@ pandas==0.20.3
 Pillow==4.3.0
 protobuf==3.4.0
 requests==2.18.4
-scipy==0.19.1
+scipy==1.0.0
 stevedore==1.27.1
 
