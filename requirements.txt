@@ -6,7 +6,7 @@ notebook==5.2.2
 numpy==1.13.3
 pandas==0.21.1
 Pillow==4.3.0
-protobuf==3.5.0.post1
+protobuf==3.5.1
 requests==2.18.4
 scipy==1.0.0
 stevedore==1.28.0
