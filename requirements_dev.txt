@@ -26,5 +26,5 @@ stevedore==1.28.0
 tornado==5.0.1
 h5py==2.7.1
 recommonmark==0.4.0
-pytest-flake8==0.9.1
+pytest-flake8==1.0.0
 tensorflow # pyup: ignore
