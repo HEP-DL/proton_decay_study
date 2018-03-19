@@ -6,7 +6,7 @@ matplotlib==2.2.2
 numpy==1.14.2
 pandas==0.22.0
 Pillow==5.0.0
-protobuf==3.5.2
+protobuf==3.5.2.post1
 requests==2.18.4
 scipy==1.0.0
 stevedore==1.28.0
