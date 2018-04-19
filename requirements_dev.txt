@@ -10,7 +10,7 @@ mock==2.0.0
 numpy==1.14.2
 pandas==0.22.0
 pandocfilters==1.4.2
-pathlib2==2.3.0
+pathlib2==2.3.2
 pbr==4.0.2
 pexpect==4.5.0
 Pillow==5.1.0
