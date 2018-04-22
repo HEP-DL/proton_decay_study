@@ -21,7 +21,7 @@ PyYAML==3.12
 pyzmq==17.0.0
 scipy==1.0.1
 seaborn==0.8.1
-Sphinx==1.7.2
+Sphinx==1.7.3
 stevedore==1.28.0
 tornado==5.0.2
 h5py==2.7.1
