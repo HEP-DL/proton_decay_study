@@ -16,7 +16,7 @@ pexpect==4.5.0
 Pillow==5.1.0
 protobuf==3.5.2.post1
 Pygments==2.2.0
-python-dateutil==2.7.2
+python-dateutil==2.7.3
 PyYAML==3.12
 pyzmq==17.0.0
 scipy==1.1.0
