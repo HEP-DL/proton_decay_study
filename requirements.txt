@@ -9,5 +9,5 @@ Pillow==5.2.0
 protobuf==3.6.0
 requests==2.19.1
 scipy==1.1.0
-stevedore==1.28.0
+stevedore==1.29.0
 
