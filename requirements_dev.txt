@@ -23,7 +23,7 @@ scipy==1.1.0
 seaborn==0.9.0
 Sphinx==1.8.0
 stevedore==1.29.0
-tornado==5.1
+tornado==5.1.1
 h5py==2.8.0
 recommonmark==0.4.0
 pytest-flake8==1.0.2
