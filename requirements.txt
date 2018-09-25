@@ -1,4 +1,4 @@
-click==6.7
+click==7.0
 h5py==2.8.0
 Keras>=2.0.0
 matplotlib==3.0.0
