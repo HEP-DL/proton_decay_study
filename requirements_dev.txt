@@ -2,8 +2,8 @@ sphinx-rtd-theme==0.4.2
 backports-abc==0.5
 click==7.0
 configparser==3.5.0
+future==0.17.1
 flake8==3.6.0
-future==0.16.0
 Keras>=2.0.0
 matplotlib==3.0.1
 mock==2.0.0
