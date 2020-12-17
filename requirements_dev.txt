@@ -25,6 +25,6 @@ Sphinx==1.8.1
 stevedore==1.30.0
 tornado==5.1.1
 h5py==2.8.0
-recommonmark==0.4.0
+recommonmark==0.7.1
 pytest-flake8==1.0.2
 tensorflow # pyup: ignore
