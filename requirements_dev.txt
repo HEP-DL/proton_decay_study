@@ -1,4 +1,4 @@
-sphinx-rtd-theme==0.4.2
+sphinx-rtd-theme==1.0.0
 backports-abc==0.5
 click==7.0
 configparser==3.5.0
